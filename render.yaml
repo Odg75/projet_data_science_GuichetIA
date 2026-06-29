@@ -1,0 +1,24 @@
+# Configuration de déploiement du backend GuichetIA sur Render.
+# Documentation : https://render.com/docs/blueprint-spec
+#
+# Le build reconstruit l'index vectoriel à chaque déploiement (les PDFs
+# sources sont versionnés dans backend/data/pdfs/, donc l'index peut être
+# régénéré à tout moment sans dépendance externe autre que le téléchargement
+# du modèle d'embeddings HuggingFace).
+
+services:
+  - type: web
+    name: guichetia-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: >
+      pip install -r requirements.txt &&
+      python ingestion/build_index.py
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PYTHON_VERSION
+        value: "3.11"

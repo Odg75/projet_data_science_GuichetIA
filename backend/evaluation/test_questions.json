@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Quelles pièces sont nécessaires pour faire ma première demande de CNIB ?",
+    "demarche": "cnib",
+    "in_scope": true
+  },
+  {
+    "question": "Que dois-je faire si j'ai perdu ma CNIB ?",
+    "demarche": "cnib",
+    "in_scope": true
+  },
+  {
+    "question": "Quelles sont les pièces à fournir pour un passeport ordinaire ?",
+    "demarche": "passeport",
+    "in_scope": true
+  },
+  {
+    "question": "Combien de temps faut-il pour obtenir un passeport ?",
+    "demarche": "passeport",
+    "in_scope": true
+  },
+  {
+    "question": "Comment créer une entreprise individuelle via le CEFORE ?",
+    "demarche": "creation_entreprise",
+    "in_scope": true
+  },
+  {
+    "question": "Quel est le prix d'un visa pour la France ?",
+    "demarche": "hors_perimetre",
+    "in_scope": false
+  },
+  {
+    "question": "Quelle est la recette du riz gras ?",
+    "demarche": "hors_perimetre",
+    "in_scope": false
+  },
+  {
+    "question": "Comment obtenir un extrait de casier judiciaire pour mon dossier de passeport ?",
+    "demarche": "passeport",
+    "in_scope": true
+  }
+]
