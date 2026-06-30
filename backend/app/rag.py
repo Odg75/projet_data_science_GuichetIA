@@ -7,9 +7,11 @@ Ce module est utilisé par main.py (API FastAPI) et par evaluation/evaluate.py.
 
 import os
 
+import numpy as np
 from dotenv import load_dotenv
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from huggingface_hub import InferenceClient
 from langchain_community.vectorstores import Chroma
+from langchain_core.embeddings import Embeddings
 from langchain_groq import ChatGroq
 
 load_dotenv()
@@ -40,6 +42,26 @@ Contexte :
 """.format(no_info=NO_INFO_MESSAGE, context="{context}")
 
 
+class HFInferenceEmbeddings(Embeddings):
+    """Embeddings calculés via l'API d'inférence HuggingFace (huggingface_hub),
+    sans charger le modèle (+ torch) en mémoire localement (cf. limite RAM Render)."""
+
+    def __init__(self, api_key: str, model_name: str):
+        self._client = InferenceClient(model=model_name, token=api_key)
+
+    def embed_documents(self, texts):
+        return [self._embed_one(t) for t in texts]
+
+    def embed_query(self, text):
+        return self._embed_one(text)
+
+    def _embed_one(self, text):
+        vector = np.asarray(self._client.feature_extraction(text))
+        if vector.ndim == 2:  # certains modèles renvoient les embeddings par token
+            vector = vector.mean(axis=0)
+        return vector.tolist()
+
+
 class RagNotReadyError(RuntimeError):
     """Levée quand la base vectorielle ou la clé API LLM sont manquantes."""
 
@@ -55,7 +77,10 @@ def load_retriever():
         return _retriever
     if not os.path.exists(CHROMA_DIR):
         return None
-    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+    hf_token = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
+    if not hf_token:
+        return None
+    embeddings = HFInferenceEmbeddings(api_key=hf_token, model_name=EMBEDDING_MODEL)
     vectordb = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
     _retriever = vectordb.as_retriever(search_kwargs={"k": TOP_K})
     return _retriever
@@ -91,7 +116,8 @@ def answer_question(question: str, retriever=None, llm=None) -> dict:
 
     if retriever is None:
         raise RagNotReadyError(
-            "Base vectorielle introuvable. Lance `python ingestion/build_index.py`."
+            "Base vectorielle indisponible. Vérifie que l'index existe "
+            "(`python ingestion/build_index.py`) et que HUGGINGFACEHUB_API_TOKEN est défini."
         )
     if llm is None:
         raise RagNotReadyError(

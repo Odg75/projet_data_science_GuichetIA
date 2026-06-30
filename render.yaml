@@ -2,9 +2,10 @@
 # Documentation : https://render.com/docs/blueprint-spec
 #
 # Le build reconstruit l'index vectoriel à chaque déploiement (les PDFs
-# sources sont versionnés dans backend/data/pdfs/, donc l'index peut être
-# régénéré à tout moment sans dépendance externe autre que le téléchargement
-# du modèle d'embeddings HuggingFace).
+# sources sont versionnés dans backend/data/pdfs/). Les embeddings sont
+# calculés via l'API d'inférence HuggingFace (HUGGINGFACEHUB_API_TOKEN),
+# pas de modèle chargé en local : ça évite de dépasser les 512 Mo de RAM
+# du plan gratuit.
 
 services:
   - type: web
@@ -19,6 +20,8 @@ services:
     healthCheckPath: /health
     envVars:
       - key: GROQ_API_KEY
+        sync: false
+      - key: HUGGINGFACEHUB_API_TOKEN
         sync: false
       - key: PYTHON_VERSION
         value: "3.11"
