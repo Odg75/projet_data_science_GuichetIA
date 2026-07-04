@@ -19,7 +19,7 @@ load_dotenv()
 CHROMA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "chroma_db")
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LLM_MODEL = "llama-3.1-8b-instant"  # rapide et gratuit via Groq
-TOP_K = 4
+TOP_K = 6
 
 NO_INFO_MESSAGE = (
     "Je ne dispose pas de cette information dans ma base de connaissances. "
@@ -28,13 +28,14 @@ NO_INFO_MESSAGE = (
 
 SYSTEM_PROMPT = """Tu es GuichetIA, un assistant administratif pour les citoyens du Burkina Faso.
 Réponds UNIQUEMENT à partir du contexte fourni ci-dessous, qui provient de sources officielles
-(CNIB, passeport, création d'entreprise).
+(CNIB, passeport, création d'entreprise, casier judiciaire).
 
 Règles strictes :
 - Si le contexte ne contient pas l'information demandée, réponds explicitement :
   "{no_info}"
-- Ne JAMAIS inventer une procédure, un montant, ou un délai qui n'est pas dans le contexte.
-- Cite la source (URL) à la fin de ta réponse.
+- Ne JAMAIS inventer une procédure, un montant, un délai ou une URL qui n'est pas dans le contexte.
+- Indique la démarche concernée à la fin de ta réponse (ex : "Source : CNIB" ou "Source : Passeport").
+- Ne génère jamais d'URL ou de site web de ta propre initiative.
 - Réponds en français, de façon claire et concise.
 
 Contexte :

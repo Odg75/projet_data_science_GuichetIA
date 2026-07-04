@@ -77,30 +77,60 @@ function SourceBadge({ demarche }) {
   );
 }
 
-function ChatBubble({ role, content, sources }) {
+function ChatBubble({ role, content, sources, onEdit }) {
+  const [copied, setCopied] = useState(false);
   const isUser = role === "user";
+
+  function handleCopy() {
+    navigator.clipboard.writeText(content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
   return (
-    <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`group flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
         <div className="h-7 w-7 flex-shrink-0 rounded-full bg-[#009A44] flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
           GIA
         </div>
       )}
-      <div
-        className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-sm ${
-          isUser
-            ? "bg-[#009A44] text-white rounded-br-none"
-            : "bg-white text-gray-800 border border-gray-100 rounded-bl-none"
-        }`}
-      >
-        {isUser ? content : <span>{renderWithLinks(content)}</span>}
-        {sources && sources.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5 border-t border-gray-100 pt-2">
-            {sources.map((s) => (
-              <SourceBadge key={s} demarche={s} />
-            ))}
-          </div>
-        )}
+      <div className="relative max-w-[78%]">
+        {/* Boutons d'action (visibles au survol) */}
+        <div className={`absolute -top-8 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ${isUser ? "right-0" : "left-0"}`}>
+          {!isUser && (
+            <button
+              onClick={handleCopy}
+              className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] text-gray-500 hover:text-gray-800 shadow-sm whitespace-nowrap"
+            >
+              {copied ? "✓ Copié" : "⎘ Copier"}
+            </button>
+          )}
+          {isUser && onEdit && (
+            <button
+              onClick={() => onEdit(content)}
+              className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] text-gray-500 hover:text-gray-800 shadow-sm whitespace-nowrap"
+            >
+              ✏ Modifier
+            </button>
+          )}
+        </div>
+        <div
+          className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-sm ${
+            isUser
+              ? "bg-[#009A44] text-white rounded-br-none"
+              : "bg-white text-gray-800 border border-gray-100 rounded-bl-none"
+          }`}
+        >
+          {isUser ? content : <span>{renderWithLinks(content)}</span>}
+          {sources && sources.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1.5 border-t border-gray-100 pt-2">
+              {sources.map((s) => (
+                <SourceBadge key={s} demarche={s} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -175,6 +205,13 @@ export default function App() {
       return updated;
     });
     if (currentIdRef.current === id) newConversation();
+  }
+
+  function handleEdit(msgIndex, content) {
+    // Supprime le message et tout ce qui suit, remet le texte dans le champ
+    setMessages((prev) => prev.slice(0, msgIndex));
+    setInput(content);
+    setError(null);
   }
 
   async function handleSend(question) {
@@ -332,7 +369,13 @@ export default function App() {
         <main className="flex-1 overflow-y-auto px-4 py-5">
           <div className="mx-auto max-w-2xl space-y-4">
             {messages.map((m, i) => (
-              <ChatBubble key={i} role={m.role} content={m.content} sources={m.sources} />
+              <ChatBubble
+                key={i}
+                role={m.role}
+                content={m.content}
+                sources={m.sources}
+                onEdit={m.role === "user" ? (content) => handleEdit(i, content) : undefined}
+              />
             ))}
             {loading && <TypingIndicator />}
             {error && (
