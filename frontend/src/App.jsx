@@ -383,8 +383,8 @@ export default function App() {
                 {error}
               </div>
             )}
-            {messages.length === 1 && !loading && (
-              <div className="mt-4">
+            {!loading && (
+              <div className="mt-2">
                 <p className="text-[11px] text-gray-400 uppercase tracking-wide font-semibold mb-2">
                   Suggestions
                 </p>
