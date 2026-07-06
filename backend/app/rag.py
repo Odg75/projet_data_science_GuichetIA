@@ -92,13 +92,47 @@ COMPETENT_STRUCTURES = {
     "certificat_nationalite": "le Tribunal de Grande Instance competent de votre lieu de residence",
 }
 
+DEMARCHE_KEYWORDS = {
+    "cnib": ["cnib", "carte nationale", "identite nationale", "piece d identite"],
+    "passeport": ["passeport"],
+    "creation_entreprise": ["entreprise", "cefore", "sarl", "mebf", "creer", "creation"],
+    "casier_judiciaire": ["casier judiciaire", "casier", "bulletin n", "extrait de casier"],
+    "acte_naissance": ["acte de naissance", "naissance", "jugement suppletif"],
+    "certificat_nationalite": ["nationalite", "certificat de nationalite"],
+}
+
+
+def detect_demarche(question: str):
+    """Detecte la demarche principale depuis les mots-cles de la question."""
+    import unicodedata
+    q = unicodedata.normalize("NFD", question.lower())
+    q = "".join(c for c in q if unicodedata.category(c) != "Mn")
+    for demarche, keywords in DEMARCHE_KEYWORDS.items():
+        if any(kw in q for kw in keywords):
+            return demarche
+    return None
+
 def get_suggested_questions(sources: list, question: str = "") -> list:
-    """Retourne jusqu'a 3 questions suggerees basees sur les demarches detectees.
-    Filtre les questions trop proches de celle deja posee."""
+    """Retourne jusqu'a 3 questions suggerees pour la demarche de la question.
+    Priorite : mots-cles de la question > chunk le mieux score.
+    Filtre les suggestions trop proches de la question posee."""
     import difflib
+
+    # Detecter la demarche depuis la question elle-meme
+    primary = detect_demarche(question)
+    # Si pas detecte, prendre la premiere demarche de la liste (meilleur chunk)
+    if primary is None and sources:
+        primary = sources[0]
+
+    # Construire la liste ordonnee : demarche principale en premier
+    ordered = [primary] if primary else []
+    for s in sources:
+        if s != primary:
+            ordered.append(s)
+
     seen = set()
     suggestions = []
-    for demarche in sources[:2]:
+    for demarche in ordered[:2]:
         for q in SUGGESTED_QUESTIONS.get(demarche, []):
             if q in seen:
                 continue
@@ -262,10 +296,5 @@ def answer_question(question: str, llm=None) -> dict:
         "gen_time_ms": gen_time_ms,
         "top_k": TOP_K,
         "llm_model": LLM_MODEL,
-        "suggested_questions": get_suggested_questions(
-            # Demarches ordonnees par score (chunk le plus pertinent en premier)
-            [chunks[i]["demarche"] for i in range(len(chunks))]
-            if chunks else sources,
-            question
-        ),
+        "suggested_questions": get_suggested_questions(sources, question),
     }

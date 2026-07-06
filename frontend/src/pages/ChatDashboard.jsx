@@ -387,13 +387,21 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
     try {
       const data = await askQuestion(text);
       clearInterval(thinkingRef.current);
+      // Filtrer les suggestions deja posees dans cette conversation
+      const askedSet = new Set(
+        [...withUser.filter(m => m.role === "user").map(m => m.content.toLowerCase())]
+      );
+      const filteredSuggestions = (data.suggested_questions || []).filter(
+        q => !askedSet.has(q.toLowerCase())
+      );
+
       const assistantMsg = {
         role: "assistant",
         content: data.answer,
         sources: data.sources,
         scoreMoyen: data.score_moyen,
         chunks: data.chunks || [],
-        suggestedQuestions: data.suggested_questions || [],
+        suggestedQuestions: filteredSuggestions,
       };
       const finalMsgs = [...withUser, assistantMsg];
       setMessages(finalMsgs);
