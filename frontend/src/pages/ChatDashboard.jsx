@@ -439,7 +439,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           <div className="h-9 w-9 flex-shrink-0 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center font-extrabold text-white text-sm shadow">G</div>
           <div>
             <p className="text-white font-bold text-sm leading-none">GuichetIA</p>
-            <p className="text-slate-400 text-[11px] mt-0.5">Burkina Faso · v2.0</p>
+            <p className="text-slate-400 text-[11px] mt-0.5">Burkina Faso</p>
           </div>
         </div>
 
@@ -509,6 +509,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
             className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
             Accueil
           </button>
+          <p className="text-[10px] text-slate-500 px-3 pt-2">Master 1 IFOAD · Data Science 2026</p>
         </div>
       </aside>
 
