@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 .env
 backend/data/chroma_db/
-backend/evaluation/results.json
 frontend/node_modules/
 frontend/dist/
 frontend/.env
