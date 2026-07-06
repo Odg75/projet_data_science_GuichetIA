@@ -103,7 +103,6 @@ function SourceBadge({ demarche }) {
 
 function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, suggestedQuestions, onSuggest }) {
   const [copied, setCopied] = useState(false);
-  const [showChunks, setShowChunks] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const isUser = role === "user";
 
@@ -175,28 +174,10 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, sugges
             <button onClick={() => setFeedback("down")}
               className={`text-xs px-2 py-0.5 rounded border transition ${feedback === "down" ? "bg-red-50 border-red-300 text-red-700 font-semibold" : "border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600"}`}
               title="Non utile">Non utile</button>
-            {chunks && chunks.length > 0 && (
-              <button onClick={() => setShowChunks(!showChunks)}
-                className="text-[11px] text-blue-600 hover:text-blue-800 transition ml-1">
-                {showChunks ? "Masquer les passages" : "Voir les passages utilises"}
-              </button>
-            )}
+
           </div>
         )}
 
-        {showChunks && chunks && chunks.length > 0 && (
-          <div className="space-y-2 mt-1">
-            {chunks.map((c, i) => (
-              <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs">
-                <div className="flex items-center justify-between mb-1.5">
-                  <SourceBadge demarche={c.demarche} />
-                  <span className="text-slate-400">Score : {c.score}%</span>
-                </div>
-                <p className="text-slate-600 leading-relaxed line-clamp-4">{c.text}</p>
-              </div>
-            ))}
-          </div>
-        )}
 
         {!isUser && suggestedQuestions && suggestedQuestions.length > 0 && onSuggest && (
           <div className="mt-2">
