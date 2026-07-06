@@ -67,24 +67,32 @@ class RagNotReadyError(RuntimeError):
     """Levée quand la base vectorielle ou la clé API LLM sont manquantes."""
 
 
-_retriever = None
+_vectordb = None
 _llm = None
 
 
-def load_retriever():
-    """Charge (une seule fois) le retriever ChromaDB. Renvoie None si l'index n'existe pas."""
-    global _retriever
-    if _retriever is not None:
-        return _retriever
+def load_vectordb():
+    """Charge (une seule fois) la base vectorielle ChromaDB.
+    Renvoie None si l'index n'existe pas ou si le token HF est absent."""
+    global _vectordb
+    if _vectordb is not None:
+        return _vectordb
     if not os.path.exists(CHROMA_DIR):
         return None
     hf_token = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
     if not hf_token:
         return None
     embeddings = HFInferenceEmbeddings(api_key=hf_token, model_name=EMBEDDING_MODEL)
-    vectordb = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
-    _retriever = vectordb.as_retriever(search_kwargs={"k": TOP_K})
-    return _retriever
+    _vectordb = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
+    return _vectordb
+
+
+def load_retriever():
+    """Renvoie un retriever LangChain (pour compatibilité avec evaluate.py)."""
+    vdb = load_vectordb()
+    if vdb is None:
+        return None
+    return vdb.as_retriever(search_kwargs={"k": TOP_K})
 
 
 def load_llm():
@@ -107,15 +115,28 @@ def build_context(docs) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def answer_question(question: str, retriever=None, llm=None) -> dict:
-    """Pose une question au pipeline RAG. Renvoie {"answer": str, "sources": [str]}.
+def answer_question(question: str, llm=None) -> dict:
+    """Pose une question au pipeline RAG.
+
+    Renvoie :
+        {
+          "answer": str,
+          "sources": [str],          # noms des démarches trouvées
+          "scores": [float],         # scores de pertinence 0-100 (un par chunk récupéré)
+          "score_moyen": float,      # moyenne des scores de pertinence
+        }
+
+    Les scores sont calculés à partir de la distance L2 ChromaDB convertie en
+    similarité : score = 1 / (1 + distance_L2) * 100.
+    Un score proche de 100 signifie que le chunk est très proche sémantiquement
+    de la question. Un score bas indique une faible pertinence.
 
     Lève RagNotReadyError si l'index ou la clé API ne sont pas disponibles.
     """
-    retriever = retriever or load_retriever()
+    vdb = load_vectordb()
     llm = llm or load_llm()
 
-    if retriever is None:
+    if vdb is None:
         raise RagNotReadyError(
             "Base vectorielle indisponible. Vérifie que l'index existe "
             "(`python ingestion/build_index.py`) et que HUGGINGFACEHUB_API_TOKEN est défini."
@@ -125,9 +146,16 @@ def answer_question(question: str, retriever=None, llm=None) -> dict:
             "Clé GROQ_API_KEY manquante. Copie .env.example en .env et renseigne ta clé."
         )
 
-    docs = retriever.invoke(question)
-    if not docs:
-        return {"answer": NO_INFO_MESSAGE, "sources": []}
+    # Recherche avec scores de distance L2
+    docs_with_scores = vdb.similarity_search_with_score(question, k=TOP_K)
+
+    if not docs_with_scores:
+        return {"answer": NO_INFO_MESSAGE, "sources": [], "scores": [], "score_moyen": 0.0}
+
+    docs = [doc for doc, _ in docs_with_scores]
+    # Conversion distance L2 → score de similarité (0-100)
+    scores = [round(1 / (1 + float(dist)) * 100, 1) for _, dist in docs_with_scores]
+    score_moyen = round(sum(scores) / len(scores), 1)
 
     context = build_context(docs)
     messages = [
@@ -136,4 +164,10 @@ def answer_question(question: str, retriever=None, llm=None) -> dict:
     ]
     response = llm.invoke(messages)
     sources = sorted({doc.metadata.get("demarche", "") for doc in docs})
-    return {"answer": response.content, "sources": sources}
+
+    return {
+        "answer": response.content,
+        "sources": sources,
+        "scores": scores,
+        "score_moyen": score_moyen,
+    }

@@ -17,7 +17,7 @@ import json
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dotenv import load_dotenv
-from app import rag  # réutilise la logique RAG de l'API (app/rag.py)
+from app import rag
 
 load_dotenv()
 
@@ -26,43 +26,48 @@ RESULTS_PATH = os.path.join(os.path.dirname(__file__), "results.json")
 
 
 def main():
-    retriever = rag.load_retriever()
+    vdb = rag.load_vectordb()
     llm = rag.load_llm()
 
-    if retriever is None or llm is None:
-        print("Index ou clé API manquante. Vérifie data/chroma_db/ et GROQ_API_KEY dans .env.")
+    if vdb is None or llm is None:
+        print("Index ou clé API manquante. Vérifie data/chroma_db/ et les variables dans .env.")
         return
 
     with open(QUESTIONS_PATH, encoding="utf-8") as f:
         questions = json.load(f)
 
     results = []
+    in_scope_total = 0
+    retrieval_ok_total = 0
+    out_scope_total = 0
+    no_hallucination_total = 0
+
     for item in questions:
         question = item["question"]
+        demarche_attendue = item["demarche"]
+        in_scope = item["in_scope"]
+
         print(f"\nQ: {question}")
-        result = rag.answer_question(question, retriever, llm)
-        answer, sources = result["answer"], result["sources"]
-        print(f"R: {answer}")
-        print(f"Sources: {sources}")
+        result = rag.answer_question(question, llm=llm)
+        answer = result["answer"]
+        sources = result["sources"]
+        scores = result["scores"]
+        score_moyen = result["score_moyen"]
 
-        results.append({
-            "question": question,
-            "demarche_attendue": item["demarche"],
-            "in_scope_attendu": item["in_scope"],
-            "reponse": answer,
-            "sources_recuperees": sources,
-            # A compléter manuellement après relecture :
-            "retrieval_pertinent": None,   # true / false
-            "hallucination_detectee": None,  # true / false
-        })
+        print(f"R: {answer[:120]}...")
+        print(f"Sources récupérées : {sources}")
+        print(f"Score moyen de pertinence : {score_moyen}%")
 
-    with open(RESULTS_PATH, "w", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
-
-    print(f"\n{len(results)} questions évaluées. Résultats enregistrés dans {RESULTS_PATH}.")
-    print("Complète manuellement les champs 'retrieval_pertinent' et 'hallucination_detectee' "
-          "pour chaque question avant de les reporter dans le rapport technique.")
-
-
-if __name__ == "__main__":
-    main()
+        # Évaluation automatique du retrieval (questions in-scope)
+        if in_scope:
+            in_scope_total += 1
+            retrieval_ok = demarche_attendue in sources
+            if retrieval_ok:
+                retrieval_ok_total += 1
+            hallucination = None  # à vérifier manuellement
+        else:
+            # Hors périmètre : hallucination si le LLM ne répond pas "Je ne sais pas"
+            out_scope_total += 1
+            retrieval_ok = None
+            hallucination = "Je ne dispose pas de cette information" not in answer
+          

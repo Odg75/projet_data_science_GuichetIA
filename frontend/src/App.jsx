@@ -77,7 +77,7 @@ function SourceBadge({ demarche }) {
   );
 }
 
-function ChatBubble({ role, content, sources, onEdit }) {
+function ChatBubble({ role, content, sources, scoreMoyen, onEdit }) {
   const [copied, setCopied] = useState(false);
   const isUser = role === "user";
 
@@ -124,10 +124,18 @@ function ChatBubble({ role, content, sources, onEdit }) {
         >
           {isUser ? content : <span>{renderWithLinks(content)}</span>}
           {sources && sources.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1.5 border-t border-gray-100 pt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-gray-100 pt-2">
               {sources.map((s) => (
                 <SourceBadge key={s} demarche={s} />
               ))}
+              {typeof scoreMoyen === "number" && scoreMoyen > 0 && (
+                <span
+                  className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] text-gray-400"
+                  title="Score moyen de pertinence des passages récupérés (0-100)"
+                >
+                  Pertinence {scoreMoyen.toFixed(0)}%
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -228,7 +236,7 @@ export default function App() {
       const data = await askQuestion(text);
       const finalMsgs = [
         ...withUser,
-        { role: "assistant", content: data.answer, sources: data.sources },
+        { role: "assistant", content: data.answer, sources: data.sources, scoreMoyen: data.score_moyen },
       ];
       setMessages(finalMsgs);
 
@@ -374,6 +382,7 @@ export default function App() {
                 role={m.role}
                 content={m.content}
                 sources={m.sources}
+                scoreMoyen={m.scoreMoyen}
                 onEdit={m.role === "user" ? (content) => handleEdit(i, content) : undefined}
               />
             ))}

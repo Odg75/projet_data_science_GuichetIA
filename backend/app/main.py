@@ -9,7 +9,7 @@ Usage (dev local) :
 
 Endpoints :
     GET  /health        -> vérifie que l'API, l'index et la clé Groq sont prêts
-    POST /ask            -> {"question": "..."} -> {"answer": "...", "sources": [...]}
+    POST /ask            -> {"question": "..."} -> {"answer": "...", "sources": [...], "scores": [...], "score_moyen": float}
 """
 
 from fastapi import FastAPI, HTTPException
@@ -24,8 +24,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Le frontend (React, servi depuis un autre domaine - Vercel) doit pouvoir
-# appeler cette API. En production, restreindre allow_origins au domaine Vercel.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -42,14 +40,14 @@ class AskRequest(BaseModel):
 class AskResponse(BaseModel):
     answer: str
     sources: list[str]
+    scores: list[float]       # score de pertinence par chunk récupéré (0-100)
+    score_moyen: float        # score moyen de pertinence de la recherche
 
 
 @app.on_event("startup")
 def startup():
-    # Tentative de préchargement (n'échoue pas le démarrage si l'index/la clé
-    # ne sont pas encore prêts : /health et /ask renverront alors une erreur claire).
     try:
-        rag.load_retriever()
+        rag.load_vectordb()
         rag.load_llm()
     except Exception:
         pass
@@ -57,12 +55,12 @@ def startup():
 
 @app.get("/health")
 def health():
-    retriever_ready = rag.load_retriever() is not None
+    vdb_ready = rag.load_vectordb() is not None
     llm_ready = rag.load_llm() is not None
-    status = "ok" if (retriever_ready and llm_ready) else "degraded"
+    status = "ok" if (vdb_ready and llm_ready) else "degraded"
     return {
         "status": status,
-        "index_ready": retriever_ready,
+        "index_ready": vdb_ready,
         "llm_ready": llm_ready,
     }
 
@@ -75,4 +73,9 @@ def ask(payload: AskRequest):
         raise HTTPException(status_code=503, detail=str(exc))
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Erreur interne : {exc}")
-    return AskResponse(answer=result["answer"], sources=result["sources"])
+    return AskResponse(
+        answer=result["answer"],
+        sources=result["sources"],
+        scores=result["scores"],
+        score_moyen=result["score_moyen"],
+    )
