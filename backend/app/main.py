@@ -1,15 +1,5 @@
 """
 API FastAPI de GuichetIA.
-
-Expose le pipeline RAG (rag.py) sous forme d'endpoints HTTP, consommés par le
-frontend React.
-
-Usage (dev local) :
-    uvicorn app.main:app --reload --port 8000
-
-Endpoints :
-    GET  /health        -> vérifie que l'API, l'index et la clé Groq sont prêts
-    POST /ask            -> {"question": "..."} -> {"answer": "...", "sources": [...], "scores": [...], "score_moyen": float}
 """
 
 from fastapi import FastAPI, HTTPException
@@ -20,8 +10,8 @@ from . import rag
 
 app = FastAPI(
     title="GuichetIA API",
-    description="Assistant administratif RAG : CNIB, passeport, création d'entreprise (Burkina Faso)",
-    version="1.0.0",
+    description="Assistant administratif RAG - Burkina Faso",
+    version="2.0.0",
 )
 
 app.add_middleware(
@@ -34,7 +24,7 @@ app.add_middleware(
 
 
 class AskRequest(BaseModel):
-    question: str = Field(..., min_length=1, max_length=1000, description="Question de l'utilisateur")
+    question: str = Field(..., min_length=1, max_length=1000)
 
 
 class ChunkInfo(BaseModel):
@@ -86,4 +76,12 @@ def ask(payload: AskRequest):
         raise HTTPException(status_code=500, detail=f"Erreur interne : {exc}")
     return AskResponse(
         answer=result["answer"],
-        sources=re
+        sources=result["sources"],
+        scores=result["scores"],
+        score_moyen=result["score_moyen"],
+        chunks=[ChunkInfo(**c) for c in result.get("chunks", [])],
+        search_time_ms=result.get("search_time_ms", 0),
+        gen_time_ms=result.get("gen_time_ms", 0),
+        top_k=result.get("top_k", 6),
+        llm_model=result.get("llm_model", ""),
+    )

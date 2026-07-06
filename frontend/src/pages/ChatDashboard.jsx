@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { askQuestion, checkHealth } from "../api";
 
-// ── Données ──────────────────────────────────────────────────────────────────
+// -- Données ------------------------------------------------------------------
 
 const DEMARCHE_LABELS = {
   cnib: "CNIB",
@@ -37,7 +37,7 @@ const THINKING_STEPS = [
   { icon: "🧠", label: "Génération de la réponse..." },
 ];
 
-// ── Utilitaires ───────────────────────────────────────────────────────────────
+// -- Utilitaires ---------------------------------------------------------------
 
 function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
@@ -81,7 +81,7 @@ function renderWithLinks(text) {
   return parts.length ? parts : [text];
 }
 
-// ── Composants ────────────────────────────────────────────────────────────────
+// -- Composants ----------------------------------------------------------------
 
 function PertinenceBar({ score }) {
   const pct = Math.round(score);
@@ -230,7 +230,7 @@ function ThinkingIndicator({ step }) {
   );
 }
 
-// ── RAG Panel ─────────────────────────────────────────────────────────────────
+// -- RAG Panel -----------------------------------------------------------------
 
 function RagPanel({ lastResult, loading }) {
   if (!lastResult && !loading) {
@@ -331,7 +331,7 @@ function RagPanel({ lastResult, loading }) {
   );
 }
 
-// ── App Dashboard ─────────────────────────────────────────────────────────────
+// -- App Dashboard -------------------------------------------------------------
 
 export default function ChatDashboard({ onNavigate, initialQuestion }) {
   const [history, setHistory] = useState(loadHistory);
@@ -456,7 +456,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
         <div className="fixed inset-0 z-20 bg-black/40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* ── Sidebar ── */}
+      {/* -- Sidebar -- */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-30 w-64 flex flex-col bg-slate-900 transition-transform duration-200 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-4 border-b border-white/10">
@@ -539,7 +539,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
         </div>
       </aside>
 
-      {/* ── Zone principale ── */}
+      {/* -- Zone principale -- */}
       <div className="flex flex-1 overflow-hidden min-w-0">
         {/* Centre : chat */}
         <div className="flex flex-1 flex-col overflow-hidden">
@@ -617,7 +617,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           </form>
         </div>
 
-        {/* ── RAG Panel ── */}
+        {/* -- RAG Panel -- */}
         {ragPanelOpen && (
           <aside className="hidden xl:flex w-72 flex-shrink-0 flex-col border-l border-slate-200 bg-white overflow-hidden">
             <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
@@ -632,7 +632,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
   );
 }
 
-// ── ConvItem (item d'historique) ──────────────────────────────────────────────
+// -- ConvItem (item d'historique) ----------------------------------------------
 
 function ConvItem({ conv, currentId, onOpen, onDelete, onFav, isFav }) {
   return (
