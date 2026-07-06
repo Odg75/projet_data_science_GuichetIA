@@ -94,7 +94,7 @@ export default function Landing({ onStart, onStartWithQuestion }) {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white/60 py-4 text-center text-xs text-slate-400">
-        Master 1 IFOAD · Data Science 2026 · Dr Delwende D. Arthur Sawadogo
+        Master 1 Data Science IFOAD 2026
       </footer>
     </div>
   );

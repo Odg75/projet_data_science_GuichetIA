@@ -500,16 +500,8 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           )}
         </div>
 
-        <div className="border-t border-white/10 px-3 py-3 space-y-0.5">
-          <button onClick={() => onNavigate("about")}
-            className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
-            A propos
-          </button>
-          <button onClick={() => onNavigate("landing")}
-            className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
-            Accueil
-          </button>
-          <p className="text-[10px] text-slate-500 px-3 pt-2">Master 1 IFOAD · Data Science 2026</p>
+        <div className="border-t border-white/10 px-4 py-3">
+          <p className="text-[10px] text-slate-500">Master 1 Data Science IFOAD 2026</p>
         </div>
       </aside>
 
@@ -531,6 +523,14 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
               <button onClick={() => setRagPanelOpen(!ragPanelOpen)}
                 className="hidden xl:flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition">
                 {ragPanelOpen ? "Masquer RAG" : "Analyse RAG"}
+              </button>
+              <button onClick={() => onNavigate("about")}
+                className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition hidden sm:block">
+                A propos
+              </button>
+              <button onClick={() => onNavigate("landing")}
+                className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition hidden sm:block">
+                Accueil
               </button>
             </div>
           </header>
