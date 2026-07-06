@@ -6,6 +6,7 @@ Ce module est utilisé par main.py (API FastAPI) et par evaluation/evaluate.py.
 """
 
 import os
+import time
 
 import numpy as np
 from dotenv import load_dotenv
@@ -147,27 +148,29 @@ def answer_question(question: str, llm=None) -> dict:
         )
 
     # Recherche avec scores de distance L2
+    t0 = time.time()
     docs_with_scores = vdb.similarity_search_with_score(question, k=TOP_K)
+    search_time_ms = round((time.time() - t0) * 1000)
 
     if not docs_with_scores:
-        return {"answer": NO_INFO_MESSAGE, "sources": [], "scores": [], "score_moyen": 0.0}
+        return {
+            "answer": NO_INFO_MESSAGE,
+            "sources": [],
+            "scores": [],
+            "score_moyen": 0.0,
+            "chunks": [],
+            "search_time_ms": search_time_ms,
+            "gen_time_ms": 0,
+            "top_k": TOP_K,
+            "llm_model": LLM_MODEL,
+        }
 
     docs = [doc for doc, _ in docs_with_scores]
     # Conversion distance L2 → score de similarité (0-100)
     scores = [round(1 / (1 + float(dist)) * 100, 1) for _, dist in docs_with_scores]
     score_moyen = round(sum(scores) / len(scores), 1)
 
-    context = build_context(docs)
-    messages = [
-        ("system", SYSTEM_PROMPT.format(context=context)),
-        ("human", question),
-    ]
-    response = llm.invoke(messages)
-    sources = sorted({doc.metadata.get("demarche", "") for doc in docs})
-
-    return {
-        "answer": response.content,
-        "sources": sources,
-        "scores": scores,
-        "score_moyen": score_moyen,
-    }
+    # Contenu des chunks pour le panneau RAG
+    chunks = [
+        {
+            "text"

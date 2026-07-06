@@ -37,11 +37,22 @@ class AskRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=1000, description="Question de l'utilisateur")
 
 
+class ChunkInfo(BaseModel):
+    text: str
+    demarche: str
+    score: float
+
+
 class AskResponse(BaseModel):
     answer: str
     sources: list[str]
-    scores: list[float]       # score de pertinence par chunk récupéré (0-100)
-    score_moyen: float        # score moyen de pertinence de la recherche
+    scores: list[float]
+    score_moyen: float
+    chunks: list[ChunkInfo] = []
+    search_time_ms: int = 0
+    gen_time_ms: int = 0
+    top_k: int = 6
+    llm_model: str = ""
 
 
 @app.on_event("startup")
@@ -75,7 +86,4 @@ def ask(payload: AskRequest):
         raise HTTPException(status_code=500, detail=f"Erreur interne : {exc}")
     return AskResponse(
         answer=result["answer"],
-        sources=result["sources"],
-        scores=result["scores"],
-        score_moyen=result["score_moyen"],
-    )
+        sources=re
