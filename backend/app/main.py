@@ -43,6 +43,7 @@ class AskResponse(BaseModel):
     gen_time_ms: int = 0
     top_k: int = 6
     llm_model: str = ""
+    suggested_questions: list[str] = []
 
 
 @app.on_event("startup")
@@ -84,4 +85,5 @@ def ask(payload: AskRequest):
         gen_time_ms=result.get("gen_time_ms", 0),
         top_k=result.get("top_k", 6),
         llm_model=result.get("llm_model", ""),
+        suggested_questions=result.get("suggested_questions", []),
     )

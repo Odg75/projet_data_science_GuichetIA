@@ -101,7 +101,7 @@ function SourceBadge({ demarche }) {
   );
 }
 
-function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit }) {
+function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, suggestedQuestions, onSuggest }) {
   const [copied, setCopied] = useState(false);
   const [showChunks, setShowChunks] = useState(false);
   const [feedback, setFeedback] = useState(null);
@@ -195,6 +195,20 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit }) {
                 <p className="text-slate-600 leading-relaxed line-clamp-4">{c.text}</p>
               </div>
             ))}
+          </div>
+        )}
+
+        {!isUser && suggestedQuestions && suggestedQuestions.length > 0 && onSuggest && (
+          <div className="mt-2">
+            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold mb-1.5 px-1">Vous pourriez aussi demander</p>
+            <div className="flex flex-wrap gap-1.5">
+              {suggestedQuestions.map((q) => (
+                <button key={q} onClick={() => onSuggest(q)}
+                  className="text-xs border border-blue-200 bg-blue-50 text-blue-700 rounded-full px-3 py-1 hover:bg-blue-100 hover:border-blue-300 transition text-left">
+                  {q}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -398,6 +412,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
         sources: data.sources,
         scoreMoyen: data.score_moyen,
         chunks: data.chunks || [],
+        suggestedQuestions: data.suggested_questions || [],
       };
       const finalMsgs = [...withUser, assistantMsg];
       setMessages(finalMsgs);
@@ -540,6 +555,8 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
               {messages.map((m, i) => (
                 <ChatBubble key={i} role={m.role} content={m.content}
                   sources={m.sources} scoreMoyen={m.scoreMoyen} chunks={m.chunks}
+                  suggestedQuestions={m.suggestedQuestions}
+                  onSuggest={handleSend}
                   onEdit={m.role === "user" ? (c) => handleEdit(i, c) : undefined} />
               ))}
               {loading && <ThinkingIndicator step={thinkingStep} />}
