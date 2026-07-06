@@ -25,6 +25,21 @@
     "in_scope": true
   },
   {
+    "question": "Comment obtenir un extrait de casier judiciaire pour mon dossier de passeport ?",
+    "demarche": "casier_judiciaire",
+    "in_scope": true
+  },
+  {
+    "question": "Comment obtenir une copie de mon acte de naissance ?",
+    "demarche": "acte_naissance",
+    "in_scope": true
+  },
+  {
+    "question": "Quelles pièces fournir pour obtenir un certificat de nationalité burkinabè ?",
+    "demarche": "certificat_nationalite",
+    "in_scope": true
+  },
+  {
     "question": "Quel est le prix d'un visa pour la France ?",
     "demarche": "hors_perimetre",
     "in_scope": false
@@ -33,10 +48,5 @@
     "question": "Quelle est la recette du riz gras ?",
     "demarche": "hors_perimetre",
     "in_scope": false
-  },
-  {
-    "question": "Comment obtenir un extrait de casier judiciaire pour mon dossier de passeport ?",
-    "demarche": "passeport",
-    "in_scope": true
   }
 ]

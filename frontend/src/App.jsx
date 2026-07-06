@@ -8,6 +8,8 @@ const DEMARCHE_LABELS = {
   passeport: "Passeport",
   creation_entreprise: "Création d'entreprise",
   casier_judiciaire: "Casier judiciaire",
+  acte_naissance: "Acte de naissance",
+  certificat_nationalite: "Certificat de nationalité",
 };
 
 const SUGGESTIONS = [
