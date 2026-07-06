@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { askQuestion, checkHealth } from "../api";
 
-// -- Données ------------------------------------------------------------------
-
 const DEMARCHE_LABELS = {
   cnib: "CNIB",
   passeport: "Passeport",
-  creation_entreprise: "Création d'entreprise",
+  creation_entreprise: "Creation d'entreprise",
   casier_judiciaire: "Casier judiciaire",
   acte_naissance: "Acte de naissance",
-  certificat_nationalite: "Certificat de nationalité",
+  certificat_nationalite: "Certificat de nationalite",
 };
 
 const DEMARCHE_COLORS = {
@@ -22,22 +20,20 @@ const DEMARCHE_COLORS = {
 };
 
 const SUGGESTIONS = [
-  { emoji: "🪪", text: "Quelles pièces pour ma première CNIB ?" },
-  { emoji: "✈️", text: "Quelles pièces pour un passeport ordinaire ?" },
-  { emoji: "🏢", text: "Comment créer une entreprise individuelle ?" },
-  { emoji: "⚖️", text: "Comment obtenir un extrait de casier judiciaire ?" },
+  { text: "Quelles pieces pour ma premiere CNIB ?" },
+  { text: "Quelles pieces pour un passeport ordinaire ?" },
+  { text: "Comment creer une entreprise individuelle ?" },
+  { text: "Comment obtenir un extrait de casier judiciaire ?" },
 ];
 
-const WELCOME = "Bonjour ! Je suis GuichetIA, votre assistant pour les démarches administratives au Burkina Faso. Posez-moi votre question.";
+const WELCOME = "Bonjour ! Je suis GuichetIA, votre assistant pour les demarches administratives au Burkina Faso. Posez-moi votre question.";
 const STORAGE_KEY = "guichetia_history_v2";
 
 const THINKING_STEPS = [
-  { icon: "🔍", label: "Recherche des documents..." },
-  { icon: "📚", label: "Analyse des textes..." },
-  { icon: "🧠", label: "Génération de la réponse..." },
+  { label: "Recherche des documents..." },
+  { label: "Analyse des textes..." },
+  { label: "Generation de la reponse..." },
 ];
-
-// -- Utilitaires ---------------------------------------------------------------
 
 function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
@@ -80,8 +76,6 @@ function renderWithLinks(text) {
   if (last < text.length) parts.push(text.slice(last));
   return parts.length ? parts : [text];
 }
-
-// -- Composants ----------------------------------------------------------------
 
 function PertinenceBar({ score }) {
   const pct = Math.round(score);
@@ -133,29 +127,27 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit }) {
       )}
 
       <div className="relative max-w-[80%] space-y-1">
-        {/* Action buttons */}
         <div className={`absolute -top-9 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 ${isUser ? "right-0" : "left-0"}`}>
           {!isUser && (
             <>
               <button onClick={handleCopy}
                 className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 shadow-sm whitespace-nowrap">
-                {copied ? "✓ Copié" : "⎘ Copier"}
+                {copied ? "Copie" : "Copier"}
               </button>
               <button onClick={handleDownload}
                 className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 shadow-sm whitespace-nowrap">
-                ↓ Télécharger
+                Telecharger
               </button>
             </>
           )}
           {isUser && onEdit && (
             <button onClick={() => onEdit(content)}
               className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 shadow-sm">
-              ✏ Modifier
+              Modifier
             </button>
           )}
         </div>
 
-        {/* Bubble */}
         <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-sm ${
           isUser
             ? "bg-gradient-to-br from-blue-700 to-blue-600 text-white rounded-br-none"
@@ -175,25 +167,23 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit }) {
           )}
         </div>
 
-        {/* Feedback + voir chunks */}
         {!isUser && (
           <div className="flex items-center gap-2 px-1">
             <button onClick={() => setFeedback("up")}
-              className={`text-base transition ${feedback === "up" ? "scale-110" : "opacity-40 hover:opacity-80"}`}
-              title="Utile">👍</button>
+              className={`text-xs px-2 py-0.5 rounded border transition ${feedback === "up" ? "bg-emerald-50 border-emerald-300 text-emerald-700 font-semibold" : "border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600"}`}
+              title="Utile">Utile</button>
             <button onClick={() => setFeedback("down")}
-              className={`text-base transition ${feedback === "down" ? "scale-110" : "opacity-40 hover:opacity-80"}`}
-              title="Non utile">👎</button>
+              className={`text-xs px-2 py-0.5 rounded border transition ${feedback === "down" ? "bg-red-50 border-red-300 text-red-700 font-semibold" : "border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600"}`}
+              title="Non utile">Non utile</button>
             {chunks && chunks.length > 0 && (
               <button onClick={() => setShowChunks(!showChunks)}
                 className="text-[11px] text-blue-600 hover:text-blue-800 transition ml-1">
-                {showChunks ? "▲ Masquer" : "📄 Voir les passages utilisés"}
+                {showChunks ? "Masquer les passages" : "Voir les passages utilises"}
               </button>
             )}
           </div>
         )}
 
-        {/* Chunks panel */}
         {showChunks && chunks && chunks.length > 0 && (
           <div className="space-y-2 mt-1">
             {chunks.map((c, i) => (
@@ -218,7 +208,6 @@ function ThinkingIndicator({ step }) {
     <div className="flex items-end gap-2 justify-start">
       <div className="h-8 w-8 flex-shrink-0 rounded-xl bg-gradient-to-br from-blue-700 to-emerald-600 flex items-center justify-center text-white text-[10px] font-bold shadow">GIA</div>
       <div className="bg-white border border-slate-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex items-center gap-2">
-        <span className="text-base">{s.icon}</span>
         <span className="text-sm text-slate-600">{s.label}</span>
         <div className="flex gap-0.5 ml-1">
           {[0,1,2].map((i) => (
@@ -230,15 +219,12 @@ function ThinkingIndicator({ step }) {
   );
 }
 
-// -- RAG Panel -----------------------------------------------------------------
-
 function RagPanel({ lastResult, loading }) {
   if (!lastResult && !loading) {
     return (
       <div className="h-full flex flex-col items-center justify-center text-center p-6">
-        <div className="text-4xl mb-3">🔬</div>
         <p className="text-sm font-semibold text-slate-700">Analyse RAG</p>
-        <p className="text-xs text-slate-400 mt-1">Les métriques apparaîtront après votre première question.</p>
+        <p className="text-xs text-slate-400 mt-1">Les metriques apparaitront apres votre premiere question.</p>
       </div>
     );
   }
@@ -256,15 +242,14 @@ function RagPanel({ lastResult, loading }) {
 
   return (
     <div className="p-4 space-y-4 text-sm overflow-y-auto h-full">
-      <p className="font-bold text-slate-800 text-xs uppercase tracking-widest">Analyse du système RAG</p>
+      <p className="font-bold text-slate-800 text-xs uppercase tracking-widest">Analyse du systeme RAG</p>
 
-      {/* Métriques clés */}
       <div className="grid grid-cols-2 gap-2">
         {[
-          { label: "Chunks récupérés", value: scores?.length ?? 0 },
-          { label: "Top-K configuré", value: top_k ?? 6 },
+          { label: "Chunks recuperes", value: scores?.length ?? 0 },
+          { label: "Top-K configure", value: top_k ?? 6 },
           { label: "Recherche", value: `${search_time_ms ?? 0} ms` },
-          { label: "Génération", value: `${gen_time_ms ?? 0} ms` },
+          { label: "Generation", value: `${gen_time_ms ?? 0} ms` },
         ].map((m) => (
           <div key={m.label} className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center">
             <p className="text-base font-extrabold text-blue-700">{m.value}</p>
@@ -273,13 +258,11 @@ function RagPanel({ lastResult, loading }) {
         ))}
       </div>
 
-      {/* LLM */}
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
-        <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-1">Modèle LLM</p>
+        <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-1">Modele LLM</p>
         <p className="font-mono text-xs text-slate-700 truncate">{llm_model || "llama-3.1-8b-instant"}</p>
       </div>
 
-      {/* Score de pertinence */}
       {typeof score_moyen === "number" && (
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
           <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Score de confiance</p>
@@ -300,20 +283,18 @@ function RagPanel({ lastResult, loading }) {
         </div>
       )}
 
-      {/* Démarches identifiées */}
       {sources && sources.length > 0 && (
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Démarches identifiées</p>
+          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Demarches identifiees</p>
           <div className="flex flex-wrap gap-1">
             {sources.map((s) => <SourceBadge key={s} demarche={s} />)}
           </div>
         </div>
       )}
 
-      {/* Passages */}
       {chunks && chunks.length > 0 && (
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Documents retrouvés ({chunks.length})</p>
+          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Documents retrouves ({chunks.length})</p>
           <div className="space-y-2">
             {chunks.map((c, i) => (
               <div key={i} className="border border-slate-200 bg-white rounded-lg p-2">
@@ -330,8 +311,6 @@ function RagPanel({ lastResult, loading }) {
     </div>
   );
 }
-
-// -- App Dashboard -------------------------------------------------------------
 
 export default function ChatDashboard({ onNavigate, initialQuestion }) {
   const [history, setHistory] = useState(loadHistory);
@@ -358,7 +337,6 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
   useEffect(() => { checkHealth().then(setApiStatus); }, []);
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
 
-  // Auto-send si initialQuestion
   useEffect(() => {
     if (initialQuestion) { setTimeout(() => handleSend(initialQuestion), 100); }
   }, []);
@@ -425,7 +403,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
       setMessages(finalMsgs);
       setLastResult(data);
 
-      const title = text.slice(0, 55) + (text.length > 55 ? "…" : "");
+      const title = text.slice(0, 55) + (text.length > 55 ? "..." : "");
       let cid = currentIdRef.current;
       if (!cid) { cid = genId(); currentIdRef.current = cid; setCurrentId(cid); }
 
@@ -451,14 +429,12 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-100">
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-20 bg-black/40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* -- Sidebar -- */}
+      {/* Sidebar */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-30 w-64 flex flex-col bg-slate-900 transition-transform duration-200 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-        {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-4 border-b border-white/10">
           <div className="h-9 w-9 flex-shrink-0 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center font-extrabold text-white text-sm shadow">G</div>
           <div>
@@ -467,28 +443,26 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           </div>
         </div>
 
-        {/* Navigation */}
         <div className="px-3 py-3 space-y-0.5">
           <button onClick={newConversation}
             className="w-full flex items-center gap-2.5 rounded-xl border border-blue-500/40 px-3 py-2.5 text-sm text-blue-400 hover:bg-blue-500/10 transition font-semibold">
-            <span className="text-lg">+</span> Nouvelle conversation
+            + Nouvelle conversation
           </button>
         </div>
 
         <div className="px-3 space-y-0.5">
           {[
-            { id: "chat", icon: "💬", label: "Conversation" },
-            { id: "demarches", icon: "📋", label: "Démarches" },
-            { id: "favorites", icon: "⭐", label: "Favoris" },
+            { id: "chat", label: "Conversation" },
+            { id: "demarches", label: "Demarches" },
+            { id: "favorites", label: "Favoris" },
           ].map((item) => (
             <button key={item.id} onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition ${activeSection === item.id ? "bg-blue-600/20 text-blue-400 font-semibold" : "text-slate-400 hover:bg-white/5 hover:text-slate-200"}`}>
-              <span>{item.icon}</span> {item.label}
+              {item.label}
             </button>
           ))}
         </div>
 
-        {/* Historique */}
         <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 mt-1">
           {activeSection === "favorites" ? (
             favConvs.length === 0
@@ -502,7 +476,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
             <div className="space-y-1.5">
               {Object.entries(DEMARCHE_LABELS).map(([key, label]) => (
                 <button key={key}
-                  onClick={() => { handleSend(`Quelles sont les étapes pour la démarche ${label} ?`); setActiveSection("chat"); }}
+                  onClick={() => { handleSend(`Quelles sont les etapes pour la demarche ${label} ?`); setActiveSection("chat"); }}
                   className="w-full text-left rounded-xl px-3 py-2 text-xs text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
                   {label}
                 </button>
@@ -526,44 +500,40 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           )}
         </div>
 
-        {/* Footer nav */}
         <div className="border-t border-white/10 px-3 py-3 space-y-0.5">
           <button onClick={() => onNavigate("about")}
             className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
-            <span>ℹ️</span> À propos
+            A propos
           </button>
           <button onClick={() => onNavigate("landing")}
             className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
-            <span>🏠</span> Accueil
+            Accueil
           </button>
         </div>
       </aside>
 
-      {/* -- Zone principale -- */}
+      {/* Zone principale */}
       <div className="flex flex-1 overflow-hidden min-w-0">
-        {/* Centre : chat */}
         <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Header */}
           <header className="flex-shrink-0 bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 shadow-sm">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-500 hover:text-slate-700 p-1 text-xl">≡</button>
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-500 hover:text-slate-700 p-1 text-xl">&#9776;</button>
             <div className="flex-1 min-w-0">
               <h1 className="text-sm font-bold text-slate-800">Guichet IA Administratif &amp; Juridique</h1>
-              <p className="text-xs text-slate-400 truncate">CNIB · Passeport · Entreprise · Casier · Acte de naissance · Nationalité</p>
+              <p className="text-xs text-slate-400 truncate">CNIB · Passeport · Entreprise · Casier · Acte de naissance · Nationalite</p>
             </div>
             <div className="flex items-center gap-2">
               {apiStatus && (
                 <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${isDegraded ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
-                  {isDegraded ? "Dégradé" : "● En ligne"}
+                  {isDegraded ? "Degrade" : "En ligne"}
                 </span>
               )}
               <button onClick={() => setRagPanelOpen(!ragPanelOpen)}
                 className="hidden xl:flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition">
-                🔬 {ragPanelOpen ? "Masquer" : "Analyse RAG"}
+                {ragPanelOpen ? "Masquer RAG" : "Analyse RAG"}
               </button>
             </div>
           </header>
 
-          {/* Messages */}
           <main className="flex-1 overflow-y-auto px-4 py-5 bg-slate-50">
             <div className="mx-auto max-w-2xl space-y-4">
               {messages.map((m, i) => (
@@ -582,7 +552,6 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
                     {SUGGESTIONS.map((s) => (
                       <button key={s.text} onClick={() => handleSend(s.text)}
                         className="flex items-start gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-xs text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition shadow-sm text-left">
-                        <span className="text-lg flex-shrink-0">{s.emoji}</span>
                         <span>{s.text}</span>
                       </button>
                     ))}
@@ -593,19 +562,18 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
             </div>
           </main>
 
-          {/* Search bar */}
           <form onSubmit={(e) => { e.preventDefault(); handleSend(); }}
             className="flex-shrink-0 bg-white border-t border-slate-200 px-4 py-3">
             <div className="mx-auto max-w-2xl">
               <div className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-2xl px-3 py-2 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition shadow-sm">
                 <input ref={inputRef} type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                  placeholder="Posez votre question sur une démarche administrative..."
+                  placeholder="Posez votre question sur une demarche administrative..."
                   className="flex-1 bg-transparent text-sm outline-none text-slate-800 placeholder-slate-400"
                   disabled={loading} />
                 {input && (
                   <button type="button" onClick={() => setInput("")}
                     className="text-slate-400 hover:text-slate-600 transition text-lg leading-none" title="Effacer">
-                    ×
+                    x
                   </button>
                 )}
                 <button type="submit" disabled={loading || !input.trim()}
@@ -617,12 +585,11 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           </form>
         </div>
 
-        {/* -- RAG Panel -- */}
         {ragPanelOpen && (
           <aside className="hidden xl:flex w-72 flex-shrink-0 flex-col border-l border-slate-200 bg-white overflow-hidden">
             <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">Analyse RAG</span>
-              <button onClick={() => setRagPanelOpen(false)} className="text-slate-400 hover:text-slate-600 text-lg leading-none">×</button>
+              <button onClick={() => setRagPanelOpen(false)} className="text-slate-400 hover:text-slate-600 text-lg leading-none">x</button>
             </div>
             <RagPanel lastResult={lastResult} loading={loading} />
           </aside>
@@ -632,8 +599,6 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
   );
 }
 
-// -- ConvItem (item d'historique) ----------------------------------------------
-
 function ConvItem({ conv, currentId, onOpen, onDelete, onFav, isFav }) {
   return (
     <div onClick={() => onOpen(conv)}
@@ -642,10 +607,10 @@ function ConvItem({ conv, currentId, onOpen, onDelete, onFav, isFav }) {
       <div className="flex items-center gap-1 ml-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition">
         <button onClick={(e) => { e.stopPropagation(); onFav(conv.id); }}
           className={`text-sm ${isFav ? "text-amber-400" : "text-slate-500 hover:text-amber-300"}`}>
-          {isFav ? "★" : "☆"}
+          {isFav ? "+" : "o"}
         </button>
         <button onClick={(e) => { e.stopPropagation(); onDelete(conv.id); }}
-          className="text-slate-500 hover:text-red-400 text-xs">✕</button>
+          className="text-slate-500 hover:text-red-400 text-xs">x</button>
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 export default function Landing({ onStart, onStartWithQuestion }) {
   const demarches = [
-    { emoji: "🪪", label: "CNIB", question: "Quelles pièces pour ma première CNIB ?" },
-    { emoji: "✈️", label: "Passeport", question: "Quelles pièces pour un passeport ordinaire ?" },
-    { emoji: "👶", label: "Acte de naissance", question: "Comment obtenir une copie de mon acte de naissance ?" },
-    { emoji: "⚖️", label: "Casier judiciaire", question: "Comment obtenir un extrait de casier judiciaire ?" },
-    { emoji: "🏢", label: "Création d'entreprise", question: "Comment créer une entreprise individuelle via le CEFORE ?" },
-    { emoji: "🇧🇫", label: "Certificat de nationalité", question: "Quelles pièces pour un certificat de nationalité burkinabè ?" },
+    { label: "CNIB", question: "Quelles pièces pour ma première CNIB ?" },
+    { label: "Passeport", question: "Quelles pièces pour un passeport ordinaire ?" },
+    { label: "Acte de naissance", question: "Comment obtenir une copie de mon acte de naissance ?" },
+    { label: "Casier judiciaire", question: "Comment obtenir un extrait de casier judiciaire ?" },
+    { label: "Création d'entreprise", question: "Comment créer une entreprise individuelle via le CEFORE ?" },
+    { label: "Certificat de nationalité", question: "Quelles pièces pour un certificat de nationalité burkinabè ?" },
   ];
 
   const stats = [
@@ -27,7 +27,7 @@ export default function Landing({ onStart, onStartWithQuestion }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={() => onStart("about")} className="text-sm text-slate-500 hover:text-slate-800 transition px-3 py-1.5">À propos</button>
+            <button onClick={() => onStart("about")} className="text-sm text-slate-500 hover:text-slate-800 transition px-3 py-1.5">A propos</button>
             <button onClick={onStart} className="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-2 rounded-xl transition shadow">Commencer</button>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default function Landing({ onStart, onStartWithQuestion }) {
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20">
         <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          Système RAG opérationnel
+          Systeme RAG operationnel
         </div>
 
         <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-700 to-emerald-600 flex items-center justify-center text-white font-extrabold text-3xl shadow-xl mb-6">G</div>
@@ -46,7 +46,7 @@ export default function Landing({ onStart, onStartWithQuestion }) {
           Guichet <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-emerald-600">IA</span> Administratif &amp; Juridique
         </h1>
         <p className="text-lg text-slate-500 max-w-xl mb-8 leading-relaxed">
-          Votre assistant intelligent pour toutes les démarches administratives et juridiques du Burkina Faso.
+          Votre assistant intelligent pour toutes les demarches administratives et juridiques du Burkina Faso.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 mb-12">
@@ -74,9 +74,9 @@ export default function Landing({ onStart, onStartWithQuestion }) {
           ))}
         </div>
 
-        {/* Démarches cards */}
+        {/* Demarches cards */}
         <div className="w-full max-w-4xl">
-          <h2 className="text-lg font-bold text-slate-700 mb-4">Nos principales démarches</h2>
+          <h2 className="text-lg font-bold text-slate-700 mb-4">Nos principales demarches</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {demarches.map((d) => (
               <button
@@ -84,9 +84,8 @@ export default function Landing({ onStart, onStartWithQuestion }) {
                 onClick={() => onStartWithQuestion(d.question)}
                 className="group bg-white border border-slate-200 hover:border-blue-300 hover:shadow-md rounded-2xl p-4 text-left transition cursor-pointer"
               >
-                <span className="text-2xl block mb-2">{d.emoji}</span>
                 <p className="font-semibold text-slate-800 text-sm group-hover:text-blue-700 transition">{d.label}</p>
-                <p className="text-xs text-slate-400 mt-0.5">Voir les démarches</p>
+                <p className="text-xs text-slate-400 mt-0.5">Voir les demarches</p>
               </button>
             ))}
           </div>
