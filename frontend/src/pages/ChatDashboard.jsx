@@ -103,11 +103,15 @@ function SourceBadge({ demarche }) {
 
 function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, suggestedQuestions, onSuggest }) {
   const [copied, setCopied] = useState(false);
+  const [copiedUser, setCopiedUser] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const isUser = role === "user";
 
   function handleCopy() {
     navigator.clipboard.writeText(content).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+  }
+  function handleCopyUser() {
+    navigator.clipboard.writeText(content).then(() => { setCopiedUser(true); setTimeout(() => setCopiedUser(false), 2000); });
   }
 
   function handleDownload() {
@@ -129,20 +133,26 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, sugges
         <div className={`absolute -top-9 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 ${isUser ? "right-0" : "left-0"}`}>
           {!isUser && (
             <>
-              <button onClick={handleCopy}
-                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 shadow-sm whitespace-nowrap">
-                {copied ? "Copie" : "Copier"}
+              <button onClick={handleCopy} title={copied ? "Copie !" : "Copier la reponse"}
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-500 hover:text-blue-600 hover:border-blue-200 shadow-sm transition">
+                {copied ? (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>) : (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>)}
               </button>
-              <button onClick={handleDownload}
-                className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 shadow-sm whitespace-nowrap">
-                Telecharger
+              <button onClick={handleDownload} title="Telecharger la reponse"
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-500 hover:text-blue-600 hover:border-blue-200 shadow-sm transition">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </button>
             </>
           )}
+          {isUser && (
+            <button onClick={handleCopyUser} title={copiedUser ? "Copie !" : "Copier la question"}
+              className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-400 hover:text-blue-500 hover:border-blue-200 shadow-sm transition">
+              {copiedUser ? (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>) : (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>)}
+            </button>
+          )}
           {isUser && onEdit && (
-            <button onClick={() => onEdit(content)}
-              className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-500 hover:text-slate-800 shadow-sm">
-              Modifier
+            <button onClick={() => onEdit(content)} title="Modifier la question"
+              className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-400 hover:text-blue-500 hover:border-blue-200 shadow-sm transition">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
           )}
         </div>
