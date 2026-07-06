@@ -83,6 +83,15 @@ SUGGESTED_QUESTIONS = {
 }
 
 
+COMPETENT_STRUCTURES = {
+    "cnib": "la Direction Generale de la Police Nationale (DGPN) ou le commissariat de police le plus proche",
+    "passeport": "la Direction Generale de la Police Nationale (DGPN) ou le commissariat de police le plus proche",
+    "creation_entreprise": "le CEFORE (Centre de Formalites des Entreprises) ou la Maison de l'Entreprise du Burkina Faso (MEBF)",
+    "casier_judiciaire": "le Tribunal de Grande Instance ou le parquet de votre juridiction competente",
+    "acte_naissance": "le Centre d'Etat Civil (mairie) ou le Tribunal de Grande Instance pour un jugement suppletif",
+    "certificat_nationalite": "le Tribunal de Grande Instance competent de votre lieu de residence",
+}
+
 def get_suggested_questions(sources: list, question: str = "") -> list:
     """Retourne jusqu'a 3 questions suggerees basees sur les demarches detectees.
     Filtre les questions trop proches de celle deja posee."""
@@ -231,8 +240,20 @@ def answer_question(question: str, llm=None) -> dict:
 
     sources = sorted({doc.metadata.get("demarche", "") for doc in docs})
 
+    # Enrichir le message de repli avec la structure competente specifique
+    answer_text = response.content
+    if "structure competente" in answer_text or "structure comp\u00e9tente" in answer_text:
+        primary = next((s for s in sources if s in COMPETENT_STRUCTURES), None)
+        if primary:
+            struct = COMPETENT_STRUCTURES[primary]
+            answer_text = answer_text.replace(
+                "la structure comp\u00e9tente", struct
+            ).replace(
+                "la structure competente", struct
+            )
+
     return {
-        "answer": response.content,
+        "answer": answer_text,
         "sources": sources,
         "scores": scores,
         "score_moyen": score_moyen,
