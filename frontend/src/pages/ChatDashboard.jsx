@@ -89,8 +89,8 @@ function SourceBadge({ demarche }) {
 
 const DEMARCHE_LINKS = {
   cnib:                   { official: "https://www.police.gov.bf/index.php/infos-utiles/cnib", label: "DGPN - Police nationale" },
-  passeport:              { official: null, label: null },
-  creation_entreprise:    { official: null, label: null },
+  passeport:              { official: "https://www.police.gov.bf/index.php/infos-utiles/passeport", label: "DGPN - Police nationale" },
+  creation_entreprise:    { official: "https://creerentreprise.me.bf/", label: "Créer Entreprise BF" },
   casier_judiciaire:      { official: "https://ecasier-judiciaire.gov.bf/#/", label: "e.Casier judiciaire" },
   acte_naissance:         { official: null, label: null },
   certificat_nationalite: { official: "https://ecertificat-nationalite.gov.bf/#/", label: "e.Certificat de nationalité" },
