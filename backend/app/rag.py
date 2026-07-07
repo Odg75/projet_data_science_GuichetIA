@@ -163,6 +163,9 @@ class HFInferenceEmbeddings(Embeddings):
         vector = np.asarray(self._client.feature_extraction(text))
         if vector.ndim == 2:
             vector = vector.mean(axis=0)
+        norm = np.linalg.norm(vector)
+        if norm > 0:
+            vector = vector / norm
         return vector.tolist()
 
 
@@ -251,7 +254,8 @@ def answer_question(question: str, llm=None) -> dict:
         }
 
     docs = [doc for doc, _ in docs_with_scores]
-    scores = [round(1 / (1 + float(dist)) * 100, 1) for _, dist in docs_with_scores]
+    # ChromaDB avec métrique cosinus retourne une distance cosinus (0=identique, 1=opposé)
+    scores = [round((1 - float(dist)) * 100, 1) for _, dist in docs_with_scores]
     score_moyen = round(sum(scores) / len(scores), 1)
 
     chunks = [
@@ -272,7 +276,14 @@ def answer_question(question: str, llm=None) -> dict:
     response = llm.invoke(messages)
     gen_time_ms = round((time.time() - t1) * 1000)
 
-    sources = sorted({doc.metadata.get("demarche", "") for doc in docs})
+    # Ordre par score décroissant (meilleur chunk en premier)
+    seen_s = set()
+    sources = []
+    for doc in docs:
+        d = doc.metadata.get("demarche", "")
+        if d and d not in seen_s:
+            seen_s.add(d)
+            sources.append(d)
 
     # Enrichir le message de repli avec la structure competente specifique
     answer_text = response.content

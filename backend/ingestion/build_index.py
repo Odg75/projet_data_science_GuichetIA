@@ -49,6 +49,9 @@ class HFInferenceEmbeddings(Embeddings):
         vector = np.asarray(self._client.feature_extraction(text))
         if vector.ndim == 2:  # certains modèles renvoient les embeddings par token
             vector = vector.mean(axis=0)
+        norm = np.linalg.norm(vector)
+        if norm > 0:
+            vector = vector / norm
         return vector.tolist()
 
 CHROMA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "chroma_db")
@@ -95,6 +98,7 @@ def main():
         documents=chunks,
         embedding=embeddings,
         persist_directory=CHROMA_DIR,
+        collection_metadata={"hnsw:space": "cosine"},
     )
     vectordb.persist()
 
