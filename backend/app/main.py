@@ -2,8 +2,11 @@
 API FastAPI de GuichetIA.
 """
 
+import os
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from . import rag
@@ -65,6 +68,16 @@ def health():
         "index_ready": vdb_ready,
         "llm_ready": llm_ready,
     }
+
+
+@app.get("/pdfs/{demarche}")
+def get_pdf(demarche: str):
+    """Sert le PDF source officiel d'une demarche administrative."""
+    safe = demarche.replace("/", "").replace("..", "").strip()
+    pdf_path = os.path.join(os.path.dirname(__file__), "..", "data", "pdfs", f"{safe}.pdf")
+    if not os.path.exists(pdf_path):
+        raise HTTPException(status_code=404, detail="PDF non trouve")
+    return FileResponse(pdf_path, media_type="application/pdf", filename=f"{safe}.pdf")
 
 
 @app.post("/ask", response_model=AskResponse)

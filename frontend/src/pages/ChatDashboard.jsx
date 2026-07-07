@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { askQuestion, checkHealth } from "../api";
+import { askQuestion, checkHealth, API_BASE } from "../api";
 
 const DEMARCHE_LABELS = {
   cnib: "CNIB",
@@ -87,6 +87,15 @@ function SourceBadge({ demarche }) {
   );
 }
 
+const DEMARCHE_LINKS = {
+  cnib:                   { official: "https://www.police.gov.bf/index.php/infos-utiles/cnib", label: "DGPN - Police nationale" },
+  passeport:              { official: null, label: null },
+  creation_entreprise:    { official: null, label: null },
+  casier_judiciaire:      { official: "https://ecasier-judiciaire.gov.bf/#/", label: "e.Casier judiciaire" },
+  acte_naissance:         { official: null, label: null },
+  certificat_nationalite: { official: "https://ecertificat-nationalite.gov.bf/#/", label: "e.Certificat de nationalité" },
+};
+
 function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, suggestedQuestions, onSuggest }) {
   const [copied, setCopied] = useState(false);
   const [copiedUser, setCopiedUser] = useState(false);
@@ -134,6 +143,27 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, sugges
               <div className="flex items-center gap-1 mt-1">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 <span className="text-[10px] text-emerald-700 font-medium">Basé sur des documents officiels du Burkina Faso</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                {sources.map((s) => {
+                  const links = DEMARCHE_LINKS[s] || {};
+                  return (
+                    <span key={s} className="flex gap-1">
+                      {links.official && (
+                        <a href={links.official} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[10px] text-blue-600 border border-blue-200 bg-blue-50 rounded-full px-2 py-0.5 hover:bg-blue-100 transition">
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          {links.label || "Site officiel"}
+                        </a>
+                      )}
+                      <a href={`${API_BASE}/pdfs/${s}`} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[10px] text-slate-500 border border-slate-200 bg-slate-50 rounded-full px-2 py-0.5 hover:bg-slate-100 transition">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Document source
+                      </a>
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
