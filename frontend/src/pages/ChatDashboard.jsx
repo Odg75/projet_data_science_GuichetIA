@@ -92,6 +92,7 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, sugges
   const [copiedUser, setCopiedUser] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const isUser = role === "user";
+  const isFallback = !isUser && typeof content === "string" && content.includes("Je ne dispose pas de cette information");
 
   function handleCopy() {
     navigator.clipboard.writeText(content).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
@@ -121,15 +122,25 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, sugges
         <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-sm ${
           isUser
             ? "bg-gradient-to-br from-blue-700 to-blue-600 text-white rounded-br-none"
-            : "bg-white text-slate-800 border border-slate-100 rounded-bl-none"
+            : isFallback ? "bg-amber-50 text-slate-800 border border-amber-200 rounded-bl-none" : "bg-white text-slate-800 border border-slate-100 rounded-bl-none"
         }`}>
           {isUser ? content : <span>{renderWithLinks(content)}</span>}
 
-          {!isUser && sources && sources.length > 0 && (
+          {!isUser && sources && sources.length > 0 && !isFallback && (
             <div className="mt-3 pt-3 border-t border-slate-100 space-y-2">
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 items-center">
                 {sources.map((s) => <SourceBadge key={s} demarche={s} />)}
               </div>
+              <div className="flex items-center gap-1 mt-1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span className="text-[10px] text-emerald-700 font-medium">Basé sur des documents officiels du Burkina Faso</span>
+              </div>
+            </div>
+          )}
+          {!isUser && isFallback && (
+            <div className="mt-3 pt-3 border-t border-amber-200 flex items-start gap-2">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span className="text-[10px] text-amber-700">Information non disponible dans notre base documentaire. Contactez directement la structure compétente.</span>
             </div>
           )}
         </div>
