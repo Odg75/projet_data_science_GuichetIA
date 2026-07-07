@@ -45,40 +45,40 @@ SYSTEM_PROMPT = (
 
 SUGGESTED_QUESTIONS = {
     "cnib": [
-        "Quelles pieces fournir pour ma premiere CNIB ?",
-        "Quelles pieces fournir pour renouveler ma CNIB ?",
+        "Quelles pièces fournir pour ma première CNIB ?",
+        "Quelles pièces fournir pour renouveler ma CNIB ?",
         "Que faire en cas de perte ou de vol de ma CNIB ?",
-        "Quel est le cout et le delai pour obtenir une CNIB ?",
+        "Quel est le coût et le délai pour obtenir une CNIB ?",
     ],
     "passeport": [
-        "Quelles pieces fournir pour un passeport ordinaire ?",
-        "Quel est le cout d'un passeport au Burkina Faso ?",
-        "Quel est le delai pour obtenir un passeport ?",
+        "Quelles pièces fournir pour un passeport ordinaire ?",
+        "Quel est le coût d'un passeport au Burkina Faso ?",
+        "Quel est le délai pour obtenir un passeport ?",
         "Comment obtenir un passeport pour un mineur ?",
     ],
     "creation_entreprise": [
-        "Comment creer une entreprise individuelle via le CEFORE ?",
-        "Quelles formalites pour creer une SARL au Burkina Faso ?",
-        "Quel est le cout de la creation d'entreprise ?",
-        "Quelle difference entre personne physique et morale pour creer une entreprise ?",
+        "Comment créer une entreprise individuelle via le CEFORE ?",
+        "Quelles formalités pour créer une SARL au Burkina Faso ?",
+        "Quel est le coût de la création d'entreprise ?",
+        "Quelle différence entre personne physique et morale pour créer une entreprise ?",
     ],
     "casier_judiciaire": [
         "Comment obtenir un extrait de casier judiciaire ?",
         "Quels types de bulletins de casier judiciaire existent ?",
-        "Quel est le delai pour obtenir un casier judiciaire ?",
-        "Ou deposer une demande de casier judiciaire ?",
+        "Quel est le délai pour obtenir un casier judiciaire ?",
+        "Où déposer une demande de casier judiciaire ?",
     ],
     "acte_naissance": [
         "Comment obtenir une copie de mon acte de naissance ?",
-        "Comment obtenir un jugement suppletif d'acte de naissance ?",
-        "Quelles pieces fournir pour un acte de naissance ?",
-        "Ou faire etablir un acte de naissance a Ouagadougou ?",
+        "Comment obtenir un jugement supplétif d'acte de naissance ?",
+        "Quelles pièces fournir pour un acte de naissance ?",
+        "Où faire établir un acte de naissance au Burkina Faso ?",
     ],
     "certificat_nationalite": [
-        "Comment obtenir un certificat de nationalite burkinabe ?",
-        "Quelles pieces fournir pour un certificat de nationalite ?",
-        "Quel est le delai pour un certificat de nationalite ?",
-        "Ou deposer une demande de certificat de nationalite ?",
+        "Comment obtenir un certificat de nationalité burkinabè ?",
+        "Quelles pièces fournir pour un certificat de nationalité ?",
+        "Quel est le délai pour un certificat de nationalité ?",
+        "Où déposer une demande de certificat de nationalité ?",
     ],
 }
 
@@ -307,5 +307,4 @@ def answer_question(question: str, llm=None) -> dict:
         "gen_time_ms": gen_time_ms,
         "top_k": TOP_K,
         "llm_model": LLM_MODEL,
-        "suggested_questions": get_suggested_questions(sources, question),
-    }
+        "suggested_questions": get_suggested_que
