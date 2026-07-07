@@ -88,8 +88,8 @@ function SourceBadge({ demarche }) {
 }
 
 const DEMARCHE_LINKS = {
-  cnib:                   { official: "https://www.police.gov.bf/index.php/infos-utiles/cnib", label: "DGPN - Police nationale" },
-  passeport:              { official: "https://www.police.gov.bf/index.php/infos-utiles/passeport", label: "DGPN - Police nationale" },
+  cnib:                   { official: "https://oni.bf/nos-prestations/cnib/", label: "ONI - Office National d'Identification" },
+  passeport:              { official: "https://oni.bf/nos-prestations/passeport/", label: "ONI - Office National d'Identification" },
   creation_entreprise:    { official: "https://creerentreprise.me.bf/", label: "Créer Entreprise BF" },
   casier_judiciaire:      { official: "https://ecasier-judiciaire.gov.bf/#/", label: "e.Casier judiciaire" },
   acte_naissance:         { official: "https://service-public.gov.bf/thematiques/etat-civil-identite-famille/demande-detablissement-dextrait-dacte-de-naissance", label: "Service Public BF" },

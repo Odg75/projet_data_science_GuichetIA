@@ -12,8 +12,9 @@ en pied de page de chaque fiche. C'est ce contenu, et uniquement celui-ci, que
 le pipeline d'ingestion (extract_pdf.py) va lire et indexer.
 
 Sources officielles utilisées :
+- https://oni.bf/nos-prestations/cnib/
+- https://oni.bf/nos-prestations/passeport/
 - https://police.gov.bf/index.php/infos-utiles/cnib
-- https://service-public.gov.bf/thematiques/etat-civil-identite-famille/demande-detablissement-ou-de-renouvellement-de-la-cnib
 - https://police.gov.bf/index.php/infos-utiles/passeport
 - https://service-public.gov.bf/thematiques/creation-dentreprise/creation-dentreprise-demande-de-creation-dentreprises-pour-les-personnes-physiques
 - https://service-public.gov.bf/thematiques/creation-dentreprise/creation-dentreprise-demande-de-creation-dentreprises-pour-les-personnes-morales
@@ -77,53 +78,52 @@ build_pdf(
     "cnib.pdf",
     "Carte Nationale d'Identité Burkinabè (CNIB)",
     [
-        ("meta", "Démarche : cnib | Mis à jour le 26/06/2026"),
+        ("meta", "Démarche : cnib | Mis à jour le 07/07/2026 — Source : oni.bf"),
         ("h2", "Description"),
         ("p", "La Carte Nationale d'Identité Burkinabè (CNIB) est un document officiel qui "
               "permet à tout citoyen de justifier son identité et sa nationalité burkinabè. "
               "Elle est obligatoire à partir de l'âge de 15 ans révolus et a une durée de "
-              "validité de 10 ans. C'est une carte biométrique sécurisée (empreintes "
-              "digitales et, depuis 2009, biométrie faciale), difficilement falsifiable."),
-        ("h2", "Qui peut faire cette démarche ?"),
-        ("list", [
-            "Être âgé de 15 ans révolus ou plus.",
-            "Être de nationalité burkinabè.",
-        ]),
+              "validité de 10 ans. C'est une carte biométrique sécurisée délivrée par "
+              "l'Office National d'Identification (ONI)."),
         ("h2", "Pièces à fournir pour une première demande"),
         ("p", "<b>Pour les Burkinabè nés au Burkina Faso :</b>"),
         ("list", [
-            "Une copie de l'acte de naissance (ou jugement supplétif d'acte de naissance).",
+            "Un extrait d'acte de naissance.",
+            "Un formulaire de demande de carte nationale d'identité (fourni par l'administration) à compléter.",
         ]),
-        ("p", "<b>Pour les Burkinabè nés à l'extérieur du Burkina Faso :</b>"),
+        ("p", "<b>Pour les Burkinabè nés hors du Burkina Faso :</b>"),
         ("list", [
-            "Une copie du certificat de nationalité.",
-            "Un formulaire de demande de carte nationale d'identité (remis sur place) à compléter.",
+            "Un certificat de nationalité.",
+            "Un formulaire de demande de carte nationale d'identité (fourni par l'administration) à compléter.",
         ]),
-        ("p", "Pièces complémentaires selon le cas : une copie légalisée de l'acte de mariage "
-              "pour les femmes désirant porter le nom de leur époux ; une copie du registre "
-              "du commerce pour faire figurer la profession de commerçant sur la carte ; "
-              "des timbres fiscaux de 2 500 F CFA."),
-        ("h2", "Coût et délai"),
+        ("p", "Pièces complémentaires selon le cas :"),
         ("list", [
-            "Coût : 2 500 F CFA (timbres fiscaux).",
-            "Délai : variable selon la localité, en général entre 7 et 30 jours "
-            "(2 à 3 semaines en moyenne), selon la distance entre le Centre de Traitement "
-            "Intermédiaire des Données (CTID) et le centre de production de l'ONI.",
+            "Pour les femmes désirant porter le nom de leur époux : une copie de l'acte de mariage.",
+            "Pour certaines professions (commerçant, médecin, magistrat, etc.) : un document justificatif.",
+        ]),
+        ("h2", "Coût et validité"),
+        ("list", [
+            "Coût : 2 500 F CFA.",
+            "Durée de validité : dix (10) ans.",
+        ]),
+        ("h2", "Conditions de renouvellement"),
+        ("p", "Les différents motifs de renouvellement de la CNIB :"),
+        ("list", [
+            "Expiration de la validité de la CNIB.",
+            "Perte (la demande doit être accompagnée d'une déclaration de perte faite dans un commissariat de police).",
+            "Altération (la demande doit être accompagnée de la carte altérée).",
+            "Vol de la CNIB (la demande doit être accompagnée d'une déclaration de perte).",
+            "Demande de changement d'adresse habituelle.",
+            "Demande de modification du prénom, du nom, de la date de naissance, ou rectification du lieu de naissance.",
         ]),
         ("h2", "Où faire la demande"),
         ("p", "Le demandeur doit se présenter en personne dans un Centre de Collecte des "
               "Données (CCD), généralement installé dans les commissariats de police ou "
               "certaines mairies. Le retrait se fait au même CCD, sur présentation du "
-              "récépissé remis lors du dépôt. En cas de déménagement, un changement de "
-              "lieu de retrait peut être demandé directement auprès de la direction "
-              "générale de l'ONI."),
-        ("h2", "Perte ou vol de la CNIB"),
-        ("p", "En cas de perte, il convient de faire une déclaration de perte dans un "
-              "commissariat de police avant de pouvoir déposer une nouvelle demande de CNIB."),
+              "récépissé remis lors du dépôt."),
         ("space", 10),
-        ("source", "https://police.gov.bf/index.php/infos-utiles/cnib"),
-        ("source", "https://service-public.gov.bf/thematiques/etat-civil-identite-famille/"
-                    "demande-detablissement-ou-de-renouvellement-de-la-cnib"),
+        ("source", "https://oni.bf/nos-prestations/cnib/"),
+        ("source", "https://www.police.gov.bf/index.php/infos-utiles/cnib"),
     ],
 )
 
@@ -134,51 +134,59 @@ build_pdf(
     "passeport.pdf",
     "Passeport ordinaire",
     [
-        ("meta", "Démarche : passeport | Mis à jour le 07/06/2026"),
+        ("meta", "Démarche : passeport | Mis à jour le 07/07/2026 — Source : oni.bf"),
         ("h2", "Description"),
-        ("p", "Le passeport ordinaire est délivré par la Direction Générale de la Police "
-              "Nationale, à travers la Division de la Migration (sise à Gounghin, "
-              "Ouagadougou). Depuis le 30 août 2018, le Burkina Faso délivre un passeport "
-              "biométrique (e-passeport), conforme aux normes de l'Organisation de "
-              "l'Aviation Civile Internationale (OACI). Le dossier se dépose tous les "
-              "matins, du lundi au vendredi."),
-        ("h2", "Pièces à fournir - pour les majeurs"),
+        ("p", "Le passeport ordinaire est délivré par l'Office National d'Identification (ONI), "
+              "à travers la Division de la Migration. Depuis le 30 août 2018, le Burkina Faso "
+              "délivre un passeport biométrique (e-passeport), conforme aux normes de "
+              "l'Organisation de l'Aviation Civile Internationale (OACI)."),
+        ("h2", "Coût et validité"),
         ("list", [
-            "Une copie légalisée de l'acte de naissance.",
-            "Une copie légalisée du certificat de nationalité burkinabè.",
-            "Une copie légalisée de la CNIB.",
-            "Un extrait de casier judiciaire en cours de validité.",
-            "Un timbre fiscal de 200 F CFA.",
-            "Trois (3) photos d'identité au format passeport.",
-            "Un document justifiant la profession du demandeur.",
-            "La somme de cinquante mille (50 000) F CFA pour les frais d'établissement.",
+            "Coût : 50 000 F CFA.",
+            "Durée de validité : cinq (05) ans.",
         ]),
-        ("p", "Pour les femmes mariées souhaitant porter le nom de leur conjoint sur le "
-              "passeport : joindre en plus une copie légalisée de l'acte de mariage."),
-        ("h2", "Pièces à fournir - pour les mineurs"),
+        ("h2", "Pièces à fournir — pour les majeurs"),
+        ("p", "Composition du dossier d'une demande de passeport :"),
         ("list", [
-            "L'acte de naissance de l'enfant.",
-            "Le certificat de nationalité de l'enfant.",
+            "Un extrait d'acte de naissance.",
+            "Un certificat de nationalité burkinabè.",
+            "Une copie légalisée de la Carte Nationale d'Identité Burkinabè (CNIB).",
+            "Un casier judiciaire en cours de validité.",
+            "Une pièce justificative de la profession (s'il y a lieu).",
+            "Toute autre pièce jugée nécessaire par la Division de la Migration.",
+        ]),
+        ("p", "<b>Pour les femmes mariées souhaitant porter le nom de l'époux :</b> "
+              "joindre en plus une copie légalisée de l'acte de mariage, "
+              "de l'acte de naissance, du certificat de nationalité, de la CNIB, "
+              "du casier judiciaire et d'un document justifiant la profession."),
+        ("h2", "Pièces à fournir — pour les mineurs"),
+        ("list", [
             "Une autorisation parentale.",
-            "Le document d'identité des deux parents (ou, si les parents résident hors du "
-            "Burkina Faso, leur titre de séjour ; dans ce cas l'autorisation parentale "
-            "n'est plus nécessaire).",
-            "Un timbre fiscal de 200 F CFA, plus la somme de 50 000 F CFA.",
-            "Trois (3) photos au format passeport.",
+            "Les CNIB ou passeports des deux parents.",
+            "Une copie légalisée de l'acte de naissance de l'enfant.",
+            "Une copie légalisée du certificat de nationalité de l'enfant.",
+            "Deux photos d'identité au format 4,5 x 3,5.",
+            "Les titres de séjour des parents, si ceux-ci résident à l'étranger.",
         ]),
-        ("p", "Pour les militaires et paramilitaires : joindre un certificat de présence "
-              "au corps précisant l'établissement d'un passeport."),
-        ("h2", "Coût et délai"),
+        ("h2", "Conditions de renouvellement"),
+        ("p", "Un passeport peut être renouvelé pour les motifs suivants :"),
         ("list", [
-            "Coût : 50 000 F CFA + un timbre fiscal de 200 F CFA.",
-            "Délai : 72 heures ouvrables si le dossier est complet et régulier "
-            "(peut varier en cas de rupture de stock de carnets passeport).",
+            "Expiration de la validité.",
+            "Validité insuffisante pour le voyage envisagé.",
+            "Perte (la demande doit être accompagnée d'une déclaration faite auprès de la Division de la Migration).",
+            "Détérioration du passeport.",
+            "Vol.",
+            "Pages saturées.",
+            "Ajout du nom du conjoint.",
+            "Modification du prénom, du nom ou de la date de naissance.",
         ]),
-        ("p", "<i>Recommandation officielle : éviter de passer par des intermédiaires.</i>"),
+        ("h2", "Où faire la demande"),
+        ("p", "Le dossier se dépose à la Division de la Migration (sise à Gounghin, Ouagadougou), "
+              "tous les matins du lundi au vendredi. "
+              "<i>Recommandation officielle : éviter de passer par des intermédiaires.</i>"),
         ("space", 10),
-        ("source", "https://police.gov.bf/index.php/infos-utiles/passeport"),
-        ("source", "https://service-public.gov.bf/thematiques/etat-civil-identite-famille/"
-                    "demande-de-passeport-ordinaire"),
+        ("source", "https://oni.bf/nos-prestations/passeport/"),
+        ("source", "https://www.police.gov.bf/index.php/infos-utiles/passeport"),
     ],
 )
 
@@ -297,4 +305,116 @@ build_pdf(
     ],
 )
 
-# --------------------------------------------
+# ---------------------------------------------------------------------------
+# 5. Acte de naissance
+# ---------------------------------------------------------------------------
+build_pdf(
+    "acte_naissance.pdf",
+    "Acte de naissance (Burkina Faso)",
+    [
+        ("meta", "Démarche : acte_naissance | Mis à jour le 06/07/2026"),
+        ("h2", "Description"),
+        ("p", "L'acte de naissance est un document officiel d'état civil attestant "
+              "la naissance d'une personne. Il est délivré par les centres d'état civil "
+              "(mairies ou communes) et est indispensable pour toute démarche administrative : "
+              "CNIB, passeport, scolarité, mariage, etc."),
+        ("h2", "Déclaration de naissance"),
+        ("p", "La déclaration de naissance doit être effectuée dans les 30 jours suivant "
+              "la naissance auprès du centre d'état civil du lieu de naissance. Passé ce délai, "
+              "la déclaration tardive nécessite un jugement supplétif d'acte de naissance "
+              "délivré par le Tribunal de Grande Instance (TGI)."),
+        ("h2", "Pièces à fournir pour une déclaration de naissance"),
+        ("list", [
+            "Le certificat médical de naissance ou une attestation de l'accoucheuse.",
+            "La pièce d'identité du déclarant (père, mère ou représentant légal).",
+            "Le livret de famille des parents (si disponible).",
+        ]),
+        ("h2", "Pièces à fournir pour obtenir une copie d'acte de naissance"),
+        ("list", [
+            "Les informations sur la personne concernée (nom, prénom, date et lieu de naissance).",
+            "La pièce d'identité du demandeur (CNIB ou passeport).",
+            "Le livret de famille (si disponible, pour faciliter la recherche).",
+        ]),
+        ("h2", "Jugement supplétif d'acte de naissance (déclaration tardive)"),
+        ("p", "Pour une personne dont la naissance n'a pas été déclarée dans les délais légaux, "
+              "il faut saisir le Tribunal de Grande Instance (TGI) ou la justice de paix du lieu "
+              "de naissance pour obtenir un jugement supplétif. Ce jugement tient lieu d'acte "
+              "de naissance à tous égards."),
+        ("list", [
+            "Témoins pouvant attester de la naissance.",
+            "Photos d'identité du concerné.",
+            "Justificatif de résidence.",
+            "Pièce d'identité du demandeur ou des parents.",
+        ]),
+        ("h2", "Coût et délai"),
+        ("list", [
+            "Coût : gratuit ou timbre fiscal de 200 F CFA selon le centre d'état civil.",
+            "Délai : immédiat à quelques jours pour une copie simple ; "
+            "plusieurs semaines pour un jugement supplétif.",
+        ]),
+        ("h2", "Où faire la demande"),
+        ("p", "La demande de copie d'acte de naissance se fait au centre d'état civil "
+              "(mairie ou commune) du lieu de naissance. Pour un jugement supplétif, "
+              "s'adresser au Tribunal de Grande Instance (TGI) ou à la justice de paix "
+              "du lieu de naissance."),
+        ("space", 10),
+        ("source", "https://service-public.gov.bf/thematiques/etat-civil-identite-famille/"
+                    "acte-de-naissance"),
+    ],
+)
+
+# ---------------------------------------------------------------------------
+# 6. Certificat de nationalité
+# ---------------------------------------------------------------------------
+build_pdf(
+    "certificat_nationalite.pdf",
+    "Certificat de Nationalité Burkinabè",
+    [
+        ("meta", "Démarche : certificat_nationalite | Mis à jour le 06/07/2026"),
+        ("h2", "Description"),
+        ("p", "Le certificat de nationalité burkinabè est un document officiel délivré "
+              "par le Tribunal de Grande Instance (TGI) attestant qu'une personne possède "
+              "la nationalité burkinabè. Il est requis pour l'établissement du passeport, "
+              "de la CNIB pour les personnes nées à l'étranger, et diverses autres démarches "
+              "administratives et juridiques."),
+        ("h2", "Qui peut faire cette démarche ?"),
+        ("p", "Tout citoyen burkinabè ou son représentant légal. Les mineurs peuvent "
+              "bénéficier du certificat de nationalité par l'intermédiaire de leurs parents "
+              "ou tuteur légal."),
+        ("h2", "Pièces à fournir"),
+        ("p", "<b>Pour les majeurs :</b>"),
+        ("list", [
+            "Un extrait d'acte de naissance.",
+            "Une copie de la CNIB ou du passeport.",
+            "Des timbres fiscaux (environ 500 F CFA).",
+        ]),
+        ("p", "<b>Pour les mineurs :</b>"),
+        ("list", [
+            "L'extrait d'acte de naissance de l'enfant.",
+            "Le livret de famille des parents.",
+            "La CNIB ou passeport d'un des parents.",
+            "Des timbres fiscaux.",
+        ]),
+        ("p", "<b>Cas particulier — personne née à l'étranger :</b> fournir en plus "
+              "tout document justifiant le lien de filiation avec un parent burkinabè "
+              "(acte de mariage des parents, passeport du parent burkinabè, etc.)."),
+        ("h2", "Validité"),
+        ("p", "Le certificat de nationalité burkinabè a généralement une durée de validité "
+              "de 3 à 6 mois selon l'usage auquel il est destiné. Il convient de vérifier "
+              "la durée de validité requise par l'administration concernée."),
+        ("h2", "Coût et délai"),
+        ("list", [
+            "Coût : timbres fiscaux (environ 500 F CFA).",
+            "Délai : variable selon le TGI, généralement quelques jours à deux semaines.",
+        ]),
+        ("h2", "Où faire la demande"),
+        ("p", "La demande se fait auprès du Tribunal de Grande Instance (TGI) du lieu "
+              "de naissance ou de résidence du demandeur. Il est conseillé de se présenter "
+              "directement au greffe du TGI compétent avec l'ensemble des pièces."),
+        ("space", 10),
+        ("source", "https://service-public.gov.bf/thematiques/etat-civil-identite-famille/"
+                    "certificat-de-nationalite-burkinabe"),
+    ],
+)
+
+print("\n6 PDFs générés dans data/pdfs/.")
