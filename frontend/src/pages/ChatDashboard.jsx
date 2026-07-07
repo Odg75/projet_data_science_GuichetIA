@@ -77,20 +77,6 @@ function renderWithLinks(text) {
   return parts.length ? parts : [text];
 }
 
-function PertinenceBar({ score }) {
-  const pct = Math.round(score);
-  const color = pct >= 70 ? "bg-emerald-500" : pct >= 40 ? "bg-amber-400" : "bg-red-400";
-  const label = pct >= 70 ? "Forte" : pct >= 40 ? "Moyenne" : "Faible";
-  return (
-    <div className="flex items-center gap-2 mt-1">
-      <span className="text-[10px] text-slate-500 w-14">Pertinence</span>
-      <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full transition-all ${color}`} style={{ width: `${pct}%` }} />
-      </div>
-      <span className="text-[10px] font-semibold text-slate-600 w-12 text-right">{pct}% · {label}</span>
-    </div>
-  );
-}
 
 function SourceBadge({ demarche }) {
   const cls = DEMARCHE_COLORS[demarche] || "bg-slate-50 text-slate-600 border-slate-200";
@@ -144,9 +130,6 @@ function ChatBubble({ role, content, sources, scoreMoyen, chunks, onEdit, sugges
               <div className="flex flex-wrap gap-1.5">
                 {sources.map((s) => <SourceBadge key={s} demarche={s} />)}
               </div>
-              {typeof scoreMoyen === "number" && scoreMoyen > 0 && (
-                <PertinenceBar score={scoreMoyen} />
-              )}
             </div>
           )}
         </div>
@@ -270,25 +253,6 @@ function RagPanel({ lastResult, loading }) {
         <p className="font-mono text-xs text-slate-700 truncate">{llm_model || "llama-3.1-8b-instant"}</p>
       </div>
 
-      {typeof score_moyen === "number" && (
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Score de confiance</p>
-          <PertinenceBar score={score_moyen} />
-          {scores && scores.length > 0 && (
-            <div className="mt-2 space-y-1">
-              {scores.map((s, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="text-[10px] text-slate-400 w-12">Chunk {i+1}</span>
-                  <div className="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-400 rounded-full" style={{ width: `${s}%` }} />
-                  </div>
-                  <span className="text-[10px] text-slate-500 w-10 text-right">{s}%</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
 
       {sources && sources.length > 0 && (
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
@@ -634,3 +598,4 @@ function ConvItem({ conv, currentId, onOpen, onDelete, onFav, isFav }) {
     </div>
   );
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
