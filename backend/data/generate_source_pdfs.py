@@ -145,28 +145,40 @@ build_pdf(
             "Coût : 50 000 F CFA.",
             "Durée de validité : cinq (05) ans.",
         ]),
+        ("h2", "Délai d'établissement"),
+        ("p", "La durée d'établissement est de <b>soixante-douze (72) heures ouvrables</b> "
+              "si le dossier est complet et régulier. En cas d'insuffisance de stocks de "
+              "passeports, le délai peut varier en fonction de l'urgence. "
+              "<b>Recommandation officielle : éviter de passer par des intermédiaires.</b>"),
         ("h2", "Pièces à fournir — pour les majeurs"),
-        ("p", "Composition du dossier d'une demande de passeport :"),
+        ("p", "Composition du dossier d'une demande de passeport (à déposer à la Division "
+              "de la Migration tous les matins du lundi au vendredi) :"),
         ("list", [
-            "Un extrait d'acte de naissance.",
-            "Un certificat de nationalité burkinabè.",
+            "Une copie légalisée de l'acte de naissance.",
+            "Une copie légalisée du certificat de nationalité burkinabè.",
             "Une copie légalisée de la Carte Nationale d'Identité Burkinabè (CNIB).",
             "Un casier judiciaire en cours de validité.",
-            "Une pièce justificative de la profession (s'il y a lieu).",
-            "Toute autre pièce jugée nécessaire par la Division de la Migration.",
+            "Un timbre fiscal de 200 F CFA.",
+            "Trois (03) photos d'identité au format passeport.",
+            "Un document justifiant la profession.",
+            "La somme de 50 000 F CFA pour les frais d'établissement.",
         ]),
         ("p", "<b>Pour les femmes mariées souhaitant porter le nom de l'époux :</b> "
-              "joindre en plus une copie légalisée de l'acte de mariage, "
-              "de l'acte de naissance, du certificat de nationalité, de la CNIB, "
-              "du casier judiciaire et d'un document justifiant la profession."),
+              "joindre en plus une copie légalisée de l'acte de mariage aux pièces "
+              "listées ci-dessus."),
+        ("p", "<b>Pour les militaires et paramilitaires :</b> "
+              "joindre un certificat de présence au corps précisant l'établissement "
+              "d'un passeport."),
         ("h2", "Pièces à fournir — pour les mineurs"),
         ("list", [
-            "Une autorisation parentale.",
-            "Les CNIB ou passeports des deux parents.",
-            "Une copie légalisée de l'acte de naissance de l'enfant.",
-            "Une copie légalisée du certificat de nationalité de l'enfant.",
-            "Deux photos d'identité au format 4,5 x 3,5.",
-            "Les titres de séjour des parents, si ceux-ci résident à l'étranger.",
+            "L'acte de naissance de l'enfant.",
+            "Le certificat de nationalité de l'enfant.",
+            "Une autorisation parentale (non requise si les parents résident à l'étranger).",
+            "Document d'identité des deux parents si le mineur réside au Burkina Faso ; "
+            "titre de séjour des deux parents si les parents résident à l'étranger.",
+            "Un timbre fiscal de 200 F CFA.",
+            "La somme de 50 000 F CFA pour les frais d'établissement.",
+            "Trois (03) photos d'identité au format passeport.",
         ]),
         ("h2", "Conditions de renouvellement"),
         ("p", "Un passeport peut être renouvelé pour les motifs suivants :"),
