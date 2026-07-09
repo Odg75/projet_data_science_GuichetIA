@@ -19,12 +19,55 @@ const DEMARCHE_COLORS = {
   certificat_nationalite: "bg-emerald-50 text-emerald-700 border-emerald-200",
 };
 
-const SUGGESTIONS = [
-  { text: "Quelles pièces pour ma première CNIB ?" },
-  { text: "Quelles pièces pour un passeport ordinaire ?" },
-  { text: "Comment créer une entreprise individuelle ?" },
-  { text: "Comment obtenir un extrait de casier judiciaire ?" },
-];
+// Une question représentative par démarche (affiché sur l'écran d'accueil du chat)
+const DEMARCHE_QUESTION_PRINCIPALE = {
+  cnib:                   "Quelles pièces pour obtenir ma première CNIB ?",
+  passeport:              "Quelles pièces pour un passeport ordinaire ?",
+  acte_naissance:         "Comment obtenir un acte de naissance au Burkina ?",
+  casier_judiciaire:      "Comment obtenir un extrait de casier judiciaire ?",
+  creation_entreprise:    "Quelles étapes pour créer une entreprise au Burkina ?",
+  certificat_nationalite: "Comment obtenir un certificat de nationalité burkinabè ?",
+};
+
+// 4 questions spécifiques par démarche (affiché quand on clique sur la démarche dans la sidebar)
+const DEMARCHE_SUGGESTIONS = {
+  cnib: [
+    "Quelles sont les pièces à fournir pour obtenir ma première CNIB ?",
+    "Combien coûte la CNIB et quelle est sa durée de validité ?",
+    "Comment renouveler une CNIB expirée ou abîmée ?",
+    "Que faire en cas de perte ou de vol de ma CNIB ?",
+  ],
+  passeport: [
+    "Quelles sont les pièces à fournir pour un passeport ordinaire ?",
+    "Combien coûte le passeport burkinabè et quelle est sa validité ?",
+    "Quels documents supplémentaires pour un passeport pour mineur ?",
+    "Comment renouveler un passeport expiré ou abîmé ?",
+  ],
+  acte_naissance: [
+    "Comment obtenir un acte de naissance au Burkina Faso ?",
+    "Quelles pièces fournir pour une demande d'extrait de naissance ?",
+    "Peut-on obtenir un acte de naissance en ligne ?",
+    "Que faire si on ne possède pas de livret de famille ?",
+  ],
+  casier_judiciaire: [
+    "Comment obtenir un extrait de casier judiciaire au Burkina ?",
+    "Peut-on demander le casier judiciaire en ligne ?",
+    "Quelle est la durée de validité d'un casier judiciaire ?",
+    "Quelles pièces sont nécessaires pour le casier judiciaire ?",
+  ],
+  creation_entreprise: [
+    "Quelles sont les étapes pour créer une entreprise au Burkina ?",
+    "Quel est le capital minimum pour créer une SARL au Burkina ?",
+    "Quels documents fournir pour immatriculer une entreprise ?",
+    "Combien coûte la création d'une entreprise au Burkina Faso ?",
+  ],
+  certificat_nationalite: [
+    "Comment obtenir un certificat de nationalité burkinabè ?",
+    "Quelles pièces fournir pour le certificat de nationalité ?",
+    "Peut-on obtenir le certificat de nationalité en ligne ?",
+    "Quelle est la durée de validité du certificat de nationalité ?",
+  ],
+};
 
 const WELCOME = "Bonjour ! Je suis GuichetIA, votre assistant pour les demarches administratives au Burkina Faso. Posez-moi votre question.";
 const STORAGE_KEY = "guichetia_history_v2";
@@ -328,6 +371,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
     try { return JSON.parse(localStorage.getItem("guichetia_favorites") || "[]"); } catch { return []; }
   });
   const [activeSection, setActiveSection] = useState("chat");
+  const [selectedDemarche, setSelectedDemarche] = useState(null);
 
   const bottomRef = useRef(null);
   const currentIdRef = useRef(null);
@@ -347,7 +391,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
     setConvId(null);
     setMessages([{ role: "assistant", content: WELCOME }]);
     setInput(""); setError(null); setLastResult(null);
-    setSidebarOpen(false); setActiveSection("chat");
+    setSidebarOpen(false); setActiveSection("chat"); setSelectedDemarche(null);
   }
 
   function openConversation(conv) {
@@ -382,6 +426,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
 
     const withUser = [...messages, { role: "user", content: text }];
     setMessages(withUser); setInput(""); setLoading(true); setError(null); setThinkingStep(0);
+    setSelectedDemarche(null);
 
     let step = 0;
     thinkingRef.current = setInterval(() => {
@@ -485,8 +530,8 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
             <div className="space-y-1.5">
               {Object.entries(DEMARCHE_LABELS).map(([key, label]) => (
                 <button key={key}
-                  onClick={() => { handleSend(`Quelles sont les etapes pour la demarche ${label} ?`); setActiveSection("chat"); }}
-                  className="w-full text-left rounded-xl px-3 py-2 text-xs text-slate-400 hover:bg-white/5 hover:text-slate-200 transition">
+                  onClick={() => { setSelectedDemarche(key); setActiveSection("chat"); setSidebarOpen(false); }}
+                  className={`w-full text-left rounded-xl px-3 py-2 text-xs transition ${selectedDemarche === key ? "bg-blue-600/20 text-blue-400 font-semibold" : "text-slate-400 hover:bg-white/5 hover:text-slate-200"}`}>
                   {label}
                 </button>
               ))}
@@ -557,14 +602,43 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
               {error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
               )}
-              {!loading && messages.length <= 1 && (
+              {!loading && messages.length <= 1 && !selectedDemarche && (
                 <div className="mt-4">
-                  <p className="text-[11px] text-slate-400 uppercase tracking-widest font-semibold mb-3">Suggestions</p>
+                  <p className="text-[11px] text-slate-400 uppercase tracking-widest font-semibold mb-3">Que voulez-vous savoir ?</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {SUGGESTIONS.map((s) => (
-                      <button key={s.text} onClick={() => handleSend(s.text)}
+                    {Object.entries(DEMARCHE_QUESTION_PRINCIPALE).map(([key, question]) => (
+                      <button key={key} onClick={() => handleSend(question)}
+                        className="flex flex-col items-start gap-1 rounded-xl border border-slate-200 bg-white px-3 py-3 text-left hover:border-blue-300 hover:bg-blue-50 transition shadow-sm">
+                        <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full border ${DEMARCHE_COLORS[key]}`}>
+                          {DEMARCHE_LABELS[key]}
+                        </span>
+                        <span className="text-xs text-slate-600 mt-0.5">{question}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!loading && messages.length <= 1 && selectedDemarche && (
+                <div className="mt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <button onClick={() => setSelectedDemarche(null)}
+                      className="text-[11px] text-slate-400 hover:text-blue-600 transition flex items-center gap-1">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                      Toutes les démarches
+                    </button>
+                    <span className="text-slate-300">|</span>
+                    <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full border ${DEMARCHE_COLORS[selectedDemarche]}`}>
+                      {DEMARCHE_LABELS[selectedDemarche]}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 uppercase tracking-widest font-semibold mb-2">Questions fréquentes</p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {(DEMARCHE_SUGGESTIONS[selectedDemarche] || []).map((q) => (
+                      <button key={q} onClick={() => handleSend(q)}
                         className="flex items-start gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-xs text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition shadow-sm text-left">
-                        <span>{s.text}</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0 text-blue-400"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span>{q}</span>
                       </button>
                     ))}
                   </div>
