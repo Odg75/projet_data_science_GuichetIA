@@ -20,7 +20,7 @@ export default function About({ onBack }) {
   const pipeline = [
     { step: "1", label: "Question utilisateur", detail: "Saisie dans l'interface React" },
     { step: "2", label: "Embedding de la requete", detail: "paraphrase-multilingual-MiniLM-L12-v2 via HuggingFace Inference API" },
-    { step: "3", label: "Recherche vectorielle", detail: "Similarite cosinus dans ChromaDB — Top-K=6 chunks" },
+    { step: "3", label: "Recherche vectorielle", detail: "Similarite cosinus dans ChromaDB, Top-K=6 chunks" },
     { step: "4", label: "Construction du contexte", detail: "Assemblage des passages retrouves en prompt structure" },
     { step: "5", label: "Generation LLM", detail: "Llama 3.1-8B-Instant via Groq API (temperature 0.1)" },
     { step: "6", label: "Reponse & sources", detail: "Reponse + badges demarches + score de pertinence" },
@@ -37,7 +37,7 @@ export default function About({ onBack }) {
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 rounded-2xl bg-white/20 flex items-center justify-center font-extrabold text-2xl shadow">G</div>
             <div>
-              <h1 className="text-2xl font-extrabold">GuichetIA — A propos</h1>
+              <h1 className="text-2xl font-extrabold">GuichetIA : A propos</h1>
               <p className="text-white/70 text-sm mt-1">Architecture technique &amp; metriques du systeme RAG</p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function About({ onBack }) {
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-4">Limites &amp; Perspectives</h2>
           <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-2 text-sm text-slate-600">
-            <p>- Les PDFs sources sont compiles manuellement a partir des portails officiels — une mise a jour automatique via scraping est envisagee.</p>
+            <p>- Les PDFs sources sont compiles manuellement a partir des portails officiels. Une mise a jour automatique via scraping est envisagee.</p>
             <p>- L'index est reconstruit a chaque deploiement Render (build_index.py). Une persistance via volume serait plus efficace.</p>
             <p>- Les scores de pertinence (distance L2 convertie) peuvent sembler faibles numeriquement mais le retrieval reste precis a 100%.</p>
             <p>- Extension possible : permis de conduire, actes d'etat civil, demarches fiscales, etc.</p>
