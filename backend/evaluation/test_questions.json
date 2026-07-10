@@ -36,4 +36,17 @@
   },
   {
     "question": "Quelles pièces fournir pour obtenir un certificat de nationalité burkinabè ?",
-  
+    "demarche": "certificat_nationalite",
+    "in_scope": true
+  },
+  {
+    "question": "Quel est le prix d'un visa pour la France ?",
+    "demarche": "hors_perimetre",
+    "in_scope": false
+  },
+  {
+    "question": "Quelle est la recette du riz gras ?",
+    "demarche": "hors_perimetre",
+    "in_scope": false
+  }
+]

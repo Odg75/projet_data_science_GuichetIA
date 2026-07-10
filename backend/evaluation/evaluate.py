@@ -70,4 +70,49 @@ def main():
             out_scope_total += 1
             retrieval_ok = None
             hallucination = "Je ne dispose pas de cette information" not in answer
-          
+            if not hallucination:
+                no_hallucination_total += 1
+
+        results.append({
+            "question": question,
+            "demarche_attendue": demarche_attendue,
+            "in_scope_attendu": in_scope,
+            "reponse": answer,
+            "sources_recuperees": sources,
+            "scores_pertinence": scores,
+            "score_moyen": score_moyen,
+            "retrieval_pertinent": retrieval_ok,
+            "hallucination_detectee": hallucination,
+        })
+
+    # Calcul des taux
+    taux_retrieval = (retrieval_ok_total / in_scope_total * 100) if in_scope_total else 0
+    taux_no_halluc = (no_hallucination_total / out_scope_total * 100) if out_scope_total else 0
+
+    summary = {
+        "nb_questions_total": len(results),
+        "nb_in_scope": in_scope_total,
+        "nb_out_scope": out_scope_total,
+        "taux_retrieval_pertinent": f"{taux_retrieval:.0f}%",
+        "taux_non_hallucination_hors_perimetre": f"{taux_no_halluc:.0f}%",
+        "note": (
+            "Le champ 'hallucination_detectee' pour les questions in-scope "
+            "est à compléter manuellement après relecture des réponses."
+        ),
+    }
+
+    output = {"summary": summary, "results": results}
+
+    with open(RESULTS_PATH, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+
+    print(f"\n{'='*60}")
+    print(f"  {len(results)} questions évaluées")
+    print(f"  Taux de retrieval pertinent    : {taux_retrieval:.0f}%  ({retrieval_ok_total}/{in_scope_total})")
+    print(f"  Taux de non-hallucination      : {taux_no_halluc:.0f}%  ({no_hallucination_total}/{out_scope_total})")
+    print(f"  Résultats complets             : {RESULTS_PATH}")
+    print(f"{'='*60}")
+
+
+if __name__ == "__main__":
+    main()
