@@ -72,7 +72,7 @@ const DEMARCHE_SUGGESTIONS = {
 // Détection de la démarche à partir du texte de la question
 function detectDemarcheFromText(text) {
   const t = text.toLowerCase()
-    .normalize("NFD").replace(/[̀-ͯ]/g, "");
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   if (t.includes("passeport")) return "passeport";
   if (t.includes("cnib") || t.includes("carte nationale") || t.includes("identite nationale")) return "cnib";
   if (t.includes("casier judiciaire") || t.includes("casier") || t.includes("bulletin n")) return "casier_judiciaire";
