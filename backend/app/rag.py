@@ -10,10 +10,7 @@ import time
 
 import numpy as np
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
-from langchain_community.vectorstores import Chroma
 from langchain_core.embeddings import Embeddings
-from langchain_groq import ChatGroq
 
 load_dotenv()
 
@@ -151,6 +148,7 @@ class HFInferenceEmbeddings(Embeddings):
     sans charger le modele (+ torch) en memoire localement (cf. limite RAM Render)."""
 
     def __init__(self, api_key: str, model_name: str):
+        from huggingface_hub import InferenceClient
         self._client = InferenceClient(model=model_name, token=api_key)
 
     def embed_documents(self, texts):
@@ -188,6 +186,7 @@ def load_vectordb():
     hf_token = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
     if not hf_token:
         return None
+    from langchain_community.vectorstores import Chroma
     embeddings = HFInferenceEmbeddings(api_key=hf_token, model_name=EMBEDDING_MODEL)
     _vectordb = Chroma(persist_directory=CHROMA_DIR, embedding_function=embeddings)
     return _vectordb
@@ -209,6 +208,7 @@ def load_llm():
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
+    from langchain_groq import ChatGroq
     _llm = ChatGroq(model=LLM_MODEL, api_key=api_key, temperature=0.1)
     return _llm
 
@@ -307,5 +307,4 @@ def answer_question(question: str, llm=None) -> dict:
         "gen_time_ms": gen_time_ms,
         "top_k": TOP_K,
         "llm_model": LLM_MODEL,
-        "suggested_questions": get_suggested_questions(sources, question),
-    }
+        "suggested_questions": get_suggested_questions(sources, q

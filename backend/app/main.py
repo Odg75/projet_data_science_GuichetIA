@@ -49,19 +49,12 @@ class AskResponse(BaseModel):
     suggested_questions: list[str] = []
 
 
-@app.on_event("startup")
-def startup():
-    try:
-        rag.load_vectordb()
-        rag.load_llm()
-    except Exception:
-        pass
-
-
 @app.get("/health")
 def health():
-    vdb_ready = rag.load_vectordb() is not None
-    llm_ready = rag.load_llm() is not None
+    # Lightweight check: no heavy imports, just verify files and env vars exist.
+    # Keeps the port binding instant and the health check always fast.
+    vdb_ready = os.path.isdir(rag.CHROMA_DIR)
+    llm_ready = bool(os.environ.get("GROQ_API_KEY"))
     status = "ok" if (vdb_ready and llm_ready) else "degraded"
     return {
         "status": status,
@@ -98,5 +91,4 @@ def ask(payload: AskRequest):
         gen_time_ms=result.get("gen_time_ms", 0),
         top_k=result.get("top_k", 6),
         llm_model=result.get("llm_model", ""),
-        suggested_questions=result.get("suggested_questions", []),
-    )
+        suggested_questions=result.get("suggested_
