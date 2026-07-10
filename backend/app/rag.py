@@ -307,4 +307,5 @@ def answer_question(question: str, llm=None) -> dict:
         "gen_time_ms": gen_time_ms,
         "top_k": TOP_K,
         "llm_model": LLM_MODEL,
-        "suggested_questions": get_suggested_questions(sources, q
+        "suggested_questions": get_suggested_questions(sources, question),
+    }
