@@ -91,4 +91,5 @@ def ask(payload: AskRequest):
         gen_time_ms=result.get("gen_time_ms", 0),
         top_k=result.get("top_k", 6),
         llm_model=result.get("llm_model", ""),
-        suggested_questions=result.get("suggested_
+        suggested_questions=result.get("suggested_questions", []),
+    )

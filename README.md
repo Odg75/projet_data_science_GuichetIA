@@ -1,6 +1,6 @@
-# GuichetIA — Assistant Administratif RAG (Burkina Faso)
+# GuichetIA : Assistant Administratif RAG (Burkina Faso)
 
-> Projet Data Science 2026 — Master 1 Informatique IFOAD — Option 7 : Assistant Juridique et Administratif
+> Projet Data Science 2026 - Master 1 Informatique IFOAD - Option 7 : Assistant Juridique et Administratif
 
 Assistant conversationnel intelligent qui répond aux questions sur **6 démarches administratives** burkinabè (CNIB, passeport, casier judiciaire, acte de naissance, certificat de nationalité, création d'entreprise) à partir de sources officielles, via un pipeline RAG (Retrieval-Augmented Generation).
 
@@ -56,7 +56,7 @@ frontend/
 Rapport_Technique_GuichetIA.pdf  -> rapport technique complet (PDF)
 ```
 
-## Mise en route — Backend
+## Mise en route : Backend
 
 1. Créer un environnement virtuel et installer les dépendances :
    ```bash
@@ -93,7 +93,7 @@ Rapport_Technique_GuichetIA.pdf  -> rapport technique complet (PDF)
    python evaluation/evaluate.py
    ```
 
-## Mise en route — Frontend
+## Mise en route : Frontend
 
 1. Installer les dépendances :
    ```bash
@@ -119,4 +119,4 @@ Rapport_Technique_GuichetIA.pdf  -> rapport technique complet (PDF)
 - L'index ChromaDB est reconstruit à chaque déploiement via `build_index.py`.
 
 **Frontend (Vercel) :**
--
+- Projet po
