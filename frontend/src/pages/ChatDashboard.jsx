@@ -69,7 +69,7 @@ const DEMARCHE_SUGGESTIONS = {
   ],
 };
 
-// Détection de la démarche à partir du texte de la question
+// Detection de la demarche a partir du texte de la question
 function detectDemarcheFromText(text) {
   const t = text.toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -82,7 +82,7 @@ function detectDemarcheFromText(text) {
   return null;
 }
 
-// Génère les suggestions en fonction de la démarche détectée dans la question posée
+// Genere les suggestions en fonction de la demarche detectee dans la question posee
 function buildSuggestions(question, askedSet) {
   const demarche = detectDemarcheFromText(question);
   if (!demarche) return [];
@@ -459,7 +459,7 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
     try {
       const data = await askQuestion(text);
       clearInterval(thinkingRef.current);
-      // Suggestions basées sur la démarche détectée localement (plus fiable que le backend)
+      // Suggestions basees sur la demarche detectee localement
       const askedSet = new Set(
         withUser.filter(m => m.role === "user").map(m => m.content.toLowerCase())
       );
@@ -695,4 +695,29 @@ export default function ChatDashboard({ onNavigate, initialQuestion }) {
           <aside className="hidden xl:flex w-72 flex-shrink-0 flex-col border-l border-slate-200 bg-white overflow-hidden">
             <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
               <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">Analyse RAG</span>
-              <button onClick={() => set
+              <button onClick={() => setRagPanelOpen(false)} className="text-slate-400 hover:text-slate-600 text-lg leading-none">x</button>
+            </div>
+            <RagPanel lastResult={lastResult} loading={loading} />
+          </aside>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ConvItem({ conv, currentId, onOpen, onDelete, onFav, isFav }) {
+  return (
+    <div onClick={() => onOpen(conv)}
+      className={`group flex items-center justify-between rounded-xl px-3 py-2 cursor-pointer transition ${conv.id === currentId ? "bg-blue-600/20 text-blue-400 font-semibold" : "text-slate-400 hover:bg-white/5 hover:text-slate-200"}`}>
+      <span className="truncate flex-1 text-xs">{conv.title}</span>
+      <div className="flex items-center gap-1 ml-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition">
+        <button onClick={(e) => { e.stopPropagation(); onFav(conv.id); }}
+          className={`text-sm ${isFav ? "text-amber-400" : "text-slate-500 hover:text-amber-300"}`}>
+          {isFav ? "+" : "o"}
+        </button>
+        <button onClick={(e) => { e.stopPropagation(); onDelete(conv.id); }}
+          className="text-slate-500 hover:text-red-400 text-xs">x</button>
+      </div>
+    </div>
+  );
+}
